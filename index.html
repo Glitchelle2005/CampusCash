@@ -1,0 +1,1194 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CampusCash | Smart University Student Financial Management</title>
+  <meta name="description" content="CampusCash is a student-focused financial management system helping university students budget semester upkeep, track M-Pesa & bank balances, achieve savings goals, and get AI financial advice." />
+  
+  <!-- Google Fonts: Plus Jakarta Sans & Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  
+  <!-- Font Awesome Icons for clean UI -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <!-- App Container -->
+  <div class="app-layout">
+    
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="brand-logo">
+          <div class="mascot-badge" id="mascotBadge">
+            <img src="logo.jpg" alt="CampusCash Mascot Ollie" class="mascot-img" id="sidebarMascotImg" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?w=100&auto=format&fit=crop&q=60';" />
+          </div>
+          <div class="brand-text">
+            <h2>Campus<span>Cash</span></h2>
+            <p class="tagline">Smart Student Budgeting</p>
+          </div>
+        </div>
+        <button class="btn-icon mobile-close-btn" id="closeSidebarBtn" aria-label="Close menu">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <!-- Mascot Profile Pill -->
+      <div class="mascot-status-card">
+        <div class="mascot-speech">
+          <span class="speech-bubble" id="mascotTip">"Hey Alex! Week 4 is underway. Keep your daily spend under KES 350!"</span>
+        </div>
+        <button class="btn-ghost-sm" id="mascotPickerBtn">
+          <i class="fa-solid fa-wand-magic-sparkles"></i> Switch Mascot
+        </button>
+      </div>
+
+      <!-- Navigation Links -->
+      <nav class="sidebar-nav">
+        <ul>
+          <li>
+            <a href="#overview" class="nav-link active" data-tab="overview">
+              <i class="fa-solid fa-chart-pie"></i>
+              <span>Dashboard</span>
+            </a>
+          </li>
+          <li>
+            <a href="#wallets" class="nav-link" data-tab="wallets">
+              <i class="fa-solid fa-wallet"></i>
+              <span>Wallets & Accounts</span>
+              <span class="badge-pill">4 Linked</span>
+            </a>
+          </li>
+          <li>
+            <a href="#goals" class="nav-link" data-tab="goals">
+              <i class="fa-solid fa-bullseye"></i>
+              <span>Semester Goals</span>
+            </a>
+          </li>
+          <li>
+            <a href="#transactions" class="nav-link" data-tab="transactions">
+              <i class="fa-solid fa-receipt"></i>
+              <span>Transactions</span>
+            </a>
+          </li>
+          <li>
+            <a href="#ai-advisor" class="nav-link" data-tab="ai-advisor">
+              <i class="fa-solid fa-robot"></i>
+              <span>CampusAI Advisor</span>
+              <span class="badge-ai">AI Coach</span>
+            </a>
+          </li>
+          <li>
+            <a href="#ussd-simulator" class="nav-link" data-tab="ussd-simulator">
+              <i class="fa-solid fa-mobile-screen-button"></i>
+              <span>Offline USSD / SMS</span>
+            </a>
+          </li>
+          <li>
+            <a href="#reports" class="nav-link" data-tab="reports">
+              <i class="fa-solid fa-file-invoice-dollar"></i>
+              <span>Reports & Export</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+
+      <!-- Semester Progress Mini-Widget -->
+      <div class="semester-meter-card">
+        <div class="semester-meta">
+          <span class="semester-label">Semester 1 (2026)</span>
+          <span class="semester-week">Week 4 / 16</span>
+        </div>
+        <div class="progress-bar-bg">
+          <div class="progress-bar-fill" style="width: 25%;"></div>
+        </div>
+        <div class="meter-subtext">
+          <span>75% semester remaining</span>
+          <span class="status-indicator on-track">On Track</span>
+        </div>
+      </div>
+
+      <!-- Sidebar Footer -->
+      <div class="sidebar-footer">
+        <div class="user-profile">
+          <div class="user-avatar">AK</div>
+          <div class="user-info">
+            <p class="user-name">Alex Kimani</p>
+            <p class="user-role">2nd Year • Computer Science</p>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <div class="main-wrapper">
+      
+      <!-- Top Navigation Header -->
+      <header class="top-header">
+        <div class="header-left">
+          <button class="btn-icon mobile-menu-btn" id="openSidebarBtn" aria-label="Open menu">
+            <i class="fa-solid fa-bars"></i>
+          </button>
+          <div class="page-title-group">
+            <h1 id="pageTitle">Financial Dashboard</h1>
+            <p class="breadcrumbs"><span id="activeAcademicYear">Academic Year 2025/2026</span> • Semester 1</p>
+          </div>
+        </div>
+
+        <div class="header-actions">
+          <!-- Quick Action: Quick Add Transaction -->
+          <button class="btn-primary btn-sm" id="quickAddTxBtn">
+            <i class="fa-solid fa-plus"></i>
+            <span>Log Money</span>
+          </button>
+
+          <!-- Quick Action: USSD Phone Launcher -->
+          <button class="btn-outline btn-sm" id="openUssdModalBtn" title="Dial USSD *384*45# Offline">
+            <i class="fa-solid fa-phone"></i>
+            <span>Dial *384*45#</span>
+          </button>
+
+          <!-- Notification Bell with Dropdown -->
+          <div class="dropdown notification-dropdown">
+            <button class="btn-icon notification-btn" id="notifBellBtn" aria-label="Notifications">
+              <i class="fa-solid fa-bell"></i>
+              <span class="notification-dot" id="notifCount">3</span>
+            </button>
+            <div class="dropdown-menu notif-menu" id="notifMenu">
+              <div class="notif-header">
+                <h3>Alerts & Warnings</h3>
+                <button class="btn-link-sm" id="markAllReadBtn">Clear All</button>
+              </div>
+              <ul class="notif-list" id="notifList">
+                <!-- Notifications populated dynamically -->
+              </ul>
+            </div>
+          </div>
+
+          <!-- Theme Toggle (Light/Dark Mode) -->
+          <button class="btn-icon theme-toggle-btn" id="themeToggleBtn" aria-label="Toggle Dark/Light Mode" title="Toggle Theme">
+            <i class="fa-solid fa-moon"></i>
+          </button>
+        </div>
+      </header>
+
+      <!-- Alert Banner for Overspending / Low Balance -->
+      <div class="system-alert-banner" id="systemAlertBanner">
+        <div class="alert-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+        <div class="alert-content">
+          <strong>Upkeep Velocity Notice:</strong> You have spent 46% of your semester upkeep in the first 4 weeks. Recommended daily cap: <strong>KES 320/day</strong> to last till final exams!
+        </div>
+        <button class="alert-close" id="closeAlertBanner">&times;</button>
+      </div>
+
+      <!-- Main Dashboard Container -->
+      <main class="content-body">
+        
+        <!-- SECTION 1: OVERVIEW TAB -->
+        <section class="tab-pane active" id="tab-overview">
+          
+          <!-- Key Metrics Grid -->
+          <div class="metrics-grid">
+            
+            <!-- Card 1: Total Available Balance -->
+            <div class="metric-card primary-card">
+              <div class="metric-header">
+                <span class="metric-title">Total Available Balance</span>
+                <span class="metric-icon-wrap"><i class="fa-solid fa-coins"></i></span>
+              </div>
+              <div class="metric-value-wrap">
+                <h2 class="metric-value" id="totalBalanceDisplay">KES 26,500.00</h2>
+                <span class="metric-sublabel">Across all 4 linked wallets</span>
+              </div>
+              <div class="metric-footer">
+                <span class="trend-indicator positive"><i class="fa-solid fa-arrow-trend-up"></i> +KES 8,000</span>
+                <span class="trend-text">HELB / Upkeep disbursed</span>
+              </div>
+            </div>
+
+            <!-- Card 2: Total Semester Income -->
+            <div class="metric-card">
+              <div class="metric-header">
+                <span class="metric-title">Total Income (Semester)</span>
+                <span class="metric-icon-wrap income-icon"><i class="fa-solid fa-arrow-down-left"></i></span>
+              </div>
+              <div class="metric-value-wrap">
+                <h2 class="metric-value text-emerald" id="totalIncomeDisplay">KES 45,000.00</h2>
+                <span class="metric-sublabel">Upkeep, pocket money & gigs</span>
+              </div>
+              <div class="metric-footer">
+                <span class="metric-stat">3 Income Sources</span>
+                <a href="#transactions" class="metric-action-link" data-tab="transactions">View details</a>
+              </div>
+            </div>
+
+            <!-- Card 3: Total Semester Expenses -->
+            <div class="metric-card">
+              <div class="metric-header">
+                <span class="metric-title">Total Expenses</span>
+                <span class="metric-icon-wrap expense-icon"><i class="fa-solid fa-arrow-up-right"></i></span>
+              </div>
+              <div class="metric-value-wrap">
+                <h2 class="metric-value text-rose" id="totalExpensesDisplay">KES 18,500.00</h2>
+                <span class="metric-sublabel">Rent, mess, handouts & transport</span>
+              </div>
+              <div class="metric-footer">
+                <span class="trend-indicator warning"><i class="fa-solid fa-gauge-high"></i> 41.1% spent</span>
+                <span class="trend-text">Target: &lt; 25%</span>
+              </div>
+            </div>
+
+            <!-- Card 4: Daily Survival Runway -->
+            <div class="metric-card runway-card">
+              <div class="metric-header">
+                <span class="metric-title">Safe Daily Allowance</span>
+                <span class="metric-icon-wrap runway-icon"><i class="fa-solid fa-calendar-check"></i></span>
+              </div>
+              <div class="metric-value-wrap">
+                <h2 class="metric-value text-amber" id="safeDailyAllowance">KES 315.00</h2>
+                <span class="metric-sublabel">84 days (12 weeks) remaining</span>
+              </div>
+              <div class="metric-footer">
+                <span class="status-pill status-warning">Watch Eating Out</span>
+                <button class="btn-link-sm" id="openAiRunwayTip">AI Plan <i class="fa-solid fa-arrow-right"></i></button>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Section: Wallets Strip + Quick Goal Summary -->
+          <div class="dashboard-split-row">
+            
+            <!-- Left: Linked Accounts / Wallets Overview -->
+            <div class="dash-card flex-2">
+              <div class="card-header">
+                <div class="card-title-group">
+                  <i class="fa-solid fa-money-bill-transfer text-blue"></i>
+                  <h3>Connected Accounts & Wallets</h3>
+                </div>
+                <button class="btn-outline-sm" id="linkAccountModalBtn">
+                  <i class="fa-solid fa-plus"></i> Link / Top-up
+                </button>
+              </div>
+              
+              <div class="wallets-grid" id="walletsOverviewGrid">
+                <!-- M-Pesa Card -->
+                <div class="wallet-pill-card mpesa-card">
+                  <div class="wallet-top">
+                    <div class="wallet-brand">
+                      <span class="brand-tag mpesa-tag">M-PESA</span>
+                      <span class="account-num">0712 ••• 890</span>
+                    </div>
+                    <i class="fa-solid fa-signal wallet-status active" title="Synced"></i>
+                  </div>
+                  <div class="wallet-balance">
+                    <span class="curr">KES</span>
+                    <span class="amt" id="mpesaBal">8,450.00</span>
+                  </div>
+                  <div class="wallet-bottom">
+                    <span class="sync-time"><i class="fa-solid fa-rotate"></i> Synced 5m ago</span>
+                    <button class="btn-micro" onclick="triggerStkPushSim('M-Pesa')">Simulate STK</button>
+                  </div>
+                </div>
+
+                <!-- Airtel Money Card -->
+                <div class="wallet-pill-card airtel-card">
+                  <div class="wallet-top">
+                    <div class="wallet-brand">
+                      <span class="brand-tag airtel-tag">Airtel Money</span>
+                      <span class="account-num">0733 ••• 412</span>
+                    </div>
+                    <i class="fa-solid fa-signal wallet-status active" title="Synced"></i>
+                  </div>
+                  <div class="wallet-balance">
+                    <span class="curr">KES</span>
+                    <span class="amt" id="airtelBal">2,100.00</span>
+                  </div>
+                  <div class="wallet-bottom">
+                    <span class="sync-time"><i class="fa-solid fa-rotate"></i> Synced 1h ago</span>
+                    <button class="btn-micro" onclick="triggerStkPushSim('Airtel Money')">Simulate STK</button>
+                  </div>
+                </div>
+
+                <!-- Bank Account Card -->
+                <div class="wallet-pill-card bank-card">
+                  <div class="wallet-top">
+                    <div class="wallet-brand">
+                      <span class="brand-tag bank-tag">Equity Student Acc</span>
+                      <span class="account-num">0140 ••• 992</span>
+                    </div>
+                    <i class="fa-solid fa-building-columns"></i>
+                  </div>
+                  <div class="wallet-balance">
+                    <span class="curr">KES</span>
+                    <span class="amt" id="bankBal">15,000.00</span>
+                  </div>
+                  <div class="wallet-bottom">
+                    <span class="sync-time">HELB Main Deposit</span>
+                    <span class="badge-lock"><i class="fa-solid fa-shield-halved"></i> Secured</span>
+                  </div>
+                </div>
+
+                <!-- Cash in Hand -->
+                <div class="wallet-pill-card cash-card">
+                  <div class="wallet-top">
+                    <div class="wallet-brand">
+                      <span class="brand-tag cash-tag">Cash in Pocket</span>
+                      <span class="account-num">Physical Notes</span>
+                    </div>
+                    <i class="fa-solid fa-hand-holding-dollar"></i>
+                  </div>
+                  <div class="wallet-balance">
+                    <span class="curr">KES</span>
+                    <span class="amt" id="cashBal">950.00</span>
+                  </div>
+                  <div class="wallet-bottom">
+                    <span class="sync-time">Manual update</span>
+                    <button class="btn-micro" onclick="openUpdateCashModal()">Adjust</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right: CampusAI Quick Advice Box -->
+            <div class="dash-card flex-1 ai-highlight-card">
+              <div class="card-header">
+                <div class="card-title-group">
+                  <i class="fa-solid fa-brain text-purple"></i>
+                  <h3>Ollie's Smart Budget Tip</h3>
+                </div>
+                <span class="badge-ai">AI Advisor</span>
+              </div>
+              <div class="ai-tip-body">
+                <div class="ai-avatar-mini">
+                  <img src="logo.jpg" alt="Mascot" class="mini-mascot-img" />
+                </div>
+                <div class="ai-tip-text">
+                  <p><strong>"Mess Food Hack:"</strong> You spent KES 3,800 on takeout this week. Cooking dinner with roommates in the hostel can save you over <strong>KES 4,200/month</strong>!</p>
+                </div>
+              </div>
+              <div class="ai-quick-prompts">
+                <button class="prompt-chip" onclick="askAiPrompt('How can I save on hostel cooking?')">🍲 Cooking hacks</button>
+                <button class="prompt-chip" onclick="askAiPrompt('Best online side-hustles for Kenyan students?')">💻 Campus Gigs</button>
+                <button class="prompt-chip" onclick="askAiPrompt('How do Money Market Funds work for students?')">📈 Student MMFs</button>
+              </div>
+              <button class="btn-primary-gradient full-width" onclick="switchTab('ai-advisor')">
+                <i class="fa-solid fa-comments"></i> Chat with CampusAI Coach
+              </button>
+            </div>
+
+          </div>
+
+          <!-- Section: Analytics & Spending Breakdown Charts -->
+          <div class="dashboard-split-row">
+            
+            <!-- Spending Chart -->
+            <div class="dash-card flex-2">
+              <div class="card-header">
+                <div class="card-title-group">
+                  <i class="fa-solid fa-chart-column text-blue"></i>
+                  <h3>Weekly Income vs Expenses (Semester View)</h3>
+                </div>
+                <div class="chart-period-selector">
+                  <button class="period-btn active" data-period="weeks">Weeks</button>
+                  <button class="period-btn" data-period="months">Months</button>
+                </div>
+              </div>
+              <div class="chart-container">
+                <canvas id="incomeExpenseChart" width="600" height="240"></canvas>
+              </div>
+              <div class="chart-legend">
+                <span class="legend-item"><span class="legend-color-dot income-dot"></span> Income (KES)</span>
+                <span class="legend-item"><span class="legend-color-dot expense-dot"></span> Expenses (KES)</span>
+                <span class="legend-item"><span class="legend-color-dot budget-dot"></span> Weekly Cap (KES 2,500)</span>
+              </div>
+            </div>
+
+            <!-- Category Breakdown Donut / Progress -->
+            <div class="dash-card flex-1">
+              <div class="card-header">
+                <div class="card-title-group">
+                  <i class="fa-solid fa-chart-pie text-cyan"></i>
+                  <h3>Top Spending Categories</h3>
+                </div>
+              </div>
+              <div class="category-breakdown-list" id="categoryBreakdownList">
+                <!-- Dynamically filled with categories: Food, Rent, Academics, Tech, Entertainment -->
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Section: Active Goals Spotlight & Recent Transactions -->
+          <div class="dashboard-split-row">
+            
+            <!-- Left: Goals Spotlight -->
+            <div class="dash-card flex-1">
+              <div class="card-header">
+                <div class="card-title-group">
+                  <i class="fa-solid fa-bullseye text-emerald"></i>
+                  <h3>Semester Goals Progress</h3>
+                </div>
+                <button class="btn-outline-sm" onclick="openNewGoalModal()">
+                  <i class="fa-solid fa-plus"></i> New Goal
+                </button>
+              </div>
+              
+              <div class="goals-spotlight-list" id="goalsSpotlightList">
+                <!-- Dynamically populated goals -->
+              </div>
+            </div>
+
+            <!-- Right: Recent Transactions Table -->
+            <div class="dash-card flex-2">
+              <div class="card-header">
+                <div class="card-title-group">
+                  <i class="fa-solid fa-clock-rotate-left text-blue"></i>
+                  <h3>Recent Transactions</h3>
+                </div>
+                <button class="btn-outline-sm" onclick="switchTab('transactions')">
+                  View All <i class="fa-solid fa-arrow-right"></i>
+                </button>
+              </div>
+
+              <div class="table-responsive">
+                <table class="modern-table">
+                  <thead>
+                    <tr>
+                      <th>Transaction</th>
+                      <th>Method</th>
+                      <th>Category</th>
+                      <th>Date</th>
+                      <th class="text-right">Amount</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody id="recentTransactionsTableBody">
+                    <!-- Populated dynamically -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+          </div>
+
+        </section>
+
+
+        <!-- SECTION 2: WALLETS & ACCOUNTS TAB -->
+        <section class="tab-pane" id="tab-wallets">
+          <div class="section-top-bar">
+            <div>
+              <h2>Connected Financial Channels</h2>
+              <p class="section-desc">Manage your mobile money accounts, student bank cards, and physical cash.</p>
+            </div>
+            <button class="btn-primary" id="linkNewWalletBtn">
+              <i class="fa-solid fa-link"></i> Connect New Channel
+            </button>
+          </div>
+
+          <div class="wallets-full-grid" id="walletsDetailedGrid">
+            <!-- Full Wallet cards with transactions & balance top-ups -->
+          </div>
+
+          <!-- M-Pesa / Bank Sim Section -->
+          <div class="dash-card mt-4">
+            <div class="card-header">
+              <div class="card-title-group">
+                <i class="fa-solid fa-tower-broadcast text-emerald"></i>
+                <h3>Mobile Money & Bank STK Push Simulator</h3>
+              </div>
+              <span class="badge-pill">Daraja API Ready</span>
+            </div>
+            <p class="text-muted">Simulate receiving M-Pesa prompt on your phone for fee deposits or pocket money top-up.</p>
+            <div class="stk-sim-box">
+              <div class="stk-form">
+                <div class="form-group">
+                  <label for="stkPhone">Phone Number / Account:</label>
+                  <input type="text" id="stkPhone" value="0712345678" class="form-control" />
+                </div>
+                <div class="form-group">
+                  <label for="stkAmount">Amount (KES):</label>
+                  <input type="number" id="stkAmount" value="1000" class="form-control" />
+                </div>
+                <div class="form-group">
+                  <label for="stkTargetWallet">Destination Wallet:</label>
+                  <select id="stkTargetWallet" class="form-control">
+                    <option value="M-Pesa">M-Pesa (0712 ••• 890)</option>
+                    <option value="Airtel Money">Airtel Money (0733 ••• 412)</option>
+                    <option value="Bank">Equity Bank Account</option>
+                  </select>
+                </div>
+                <button class="btn-primary-gradient" id="sendStkPushBtn">
+                  <i class="fa-solid fa-paper-plane"></i> Send STK Push Simulation
+                </button>
+              </div>
+              <div class="stk-phone-preview" id="stkPhonePreview">
+                <div class="phone-screen-msg">
+                  <i class="fa-solid fa-mobile text-blue"></i>
+                  <p id="stkStatusText">Enter details and click "Send STK Push Simulation" to test phone prompt.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- SECTION 3: SEMESTER GOALS TAB -->
+        <section class="tab-pane" id="tab-goals">
+          <div class="section-top-bar">
+            <div>
+              <h2>Semester Financial Goals</h2>
+              <p class="section-desc">Plan for hostel rent, course textbooks, project materials, and emergency funds so you don't run dry.</p>
+            </div>
+            <button class="btn-primary" onclick="openNewGoalModal()">
+              <i class="fa-solid fa-plus"></i> Create New Goal
+            </button>
+          </div>
+
+          <!-- Goal Summary Overview Cards -->
+          <div class="metrics-grid mb-4">
+            <div class="metric-card">
+              <span class="metric-title">Total Target Amount</span>
+              <h3 class="metric-value text-blue" id="goalsTotalTarget">KES 38,000.00</h3>
+              <span class="metric-sublabel">Across 4 active goals</span>
+            </div>
+            <div class="metric-card">
+              <span class="metric-title">Total Funds Saved</span>
+              <h3 class="metric-value text-emerald" id="goalsTotalSaved">KES 22,500.00</h3>
+              <span class="metric-sublabel">59.2% of total milestone reached</span>
+            </div>
+            <div class="metric-card">
+              <span class="metric-title">Nearest Deadline</span>
+              <h3 class="metric-value text-amber" id="goalsNearestDeadline">Hostel Rent</h3>
+              <span class="metric-sublabel">Due in 18 days (Nov 15)</span>
+            </div>
+          </div>
+
+          <!-- Goal Cards Grid -->
+          <div class="goals-full-grid" id="goalsFullGrid">
+            <!-- Full Goal Cards rendered here -->
+          </div>
+        </section>
+
+
+        <!-- SECTION 4: TRANSACTIONS TAB -->
+        <section class="tab-pane" id="tab-transactions">
+          <div class="section-top-bar">
+            <div>
+              <h2>All Income & Expenses</h2>
+              <p class="section-desc">Keep track of every shilling spent on campus or earned through side gigs.</p>
+            </div>
+            <div class="action-btn-group">
+              <button class="btn-outline" id="exportTxCsvBtn">
+                <i class="fa-solid fa-file-csv"></i> Export CSV
+              </button>
+              <button class="btn-primary" onclick="openNewTxModal()">
+                <i class="fa-solid fa-plus"></i> Add Transaction
+              </button>
+            </div>
+          </div>
+
+          <!-- Transaction Filter & Search Toolbar -->
+          <div class="filter-toolbar">
+            <div class="search-box">
+              <i class="fa-solid fa-magnifying-glass"></i>
+              <input type="text" id="txSearchInput" placeholder="Search by name, category, or note..." />
+            </div>
+            <div class="filter-selects">
+              <select id="txTypeFilter" class="form-control-sm">
+                <option value="all">All Types</option>
+                <option value="income">Income Only</option>
+                <option value="expense">Expense Only</option>
+              </select>
+              <select id="txCategoryFilter" class="form-control-sm">
+                <option value="all">All Categories</option>
+                <option value="Food & Mess">Food & Mess</option>
+                <option value="Hostel & Rent">Hostel & Rent</option>
+                <option value="Academics & Books">Academics & Books</option>
+                <option value="Transport">Transport</option>
+                <option value="Tech & Bundles">Tech & Bundles</option>
+                <option value="Entertainment">Entertainment</option>
+                <option value="Side Hustle">Side Hustle</option>
+                <option value="Upkeep / Allowance">Upkeep / Allowance</option>
+              </select>
+              <select id="txWalletFilter" class="form-control-sm">
+                <option value="all">All Wallets</option>
+                <option value="M-Pesa">M-Pesa</option>
+                <option value="Airtel Money">Airtel Money</option>
+                <option value="Bank">Bank Account</option>
+                <option value="Cash">Cash</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Transactions Full Table -->
+          <div class="dash-card">
+            <div class="table-responsive">
+              <table class="modern-table">
+                <thead>
+                  <tr>
+                    <th>Title & Note</th>
+                    <th>Type</th>
+                    <th>Category</th>
+                    <th>Payment Method</th>
+                    <th>Date & Time</th>
+                    <th class="text-right">Amount (KES)</th>
+                    <th class="text-center">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="allTransactionsTableBody">
+                  <!-- Dynamically populated -->
+                </tbody>
+              </table>
+            </div>
+            <div class="table-pagination">
+              <span id="txCountInfo">Showing 10 transactions</span>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- SECTION 5: CAMPUSAI FINANCIAL ADVISOR TAB -->
+        <section class="tab-pane" id="tab-ai-advisor">
+          <div class="section-top-bar">
+            <div>
+              <h2>CampusAI Financial Coach</h2>
+              <p class="section-desc">Get instant personalized guidance on budgeting, campus side-hustles, student investments, and money hacks.</p>
+            </div>
+            <span class="badge-ai-large"><i class="fa-solid fa-sparkles"></i> AI Powered by CampusCash Engine</span>
+          </div>
+
+          <div class="ai-layout-grid">
+            
+            <!-- Left: Interactive AI Chat Box -->
+            <div class="dash-card ai-chat-container">
+              <div class="chat-header">
+                <div class="chat-bot-info">
+                  <div class="bot-avatar">
+                    <img src="logo.jpg" alt="CampusAI Ollie" class="mascot-img" />
+                    <span class="online-indicator"></span>
+                  </div>
+                  <div>
+                    <h4>Ollie AI Advisor</h4>
+                    <p class="bot-role">Student Financial Intelligence Coach</p>
+                  </div>
+                </div>
+                <button class="btn-icon-sm" id="clearChatBtn" title="Clear Conversation">
+                  <i class="fa-solid fa-rotate-right"></i>
+                </button>
+              </div>
+
+              <!-- Chat Message History -->
+              <div class="chat-messages-area" id="chatMessagesArea">
+                <div class="chat-message bot-msg">
+                  <div class="msg-avatar">
+                    <img src="logo.jpg" alt="Bot" />
+                  </div>
+                  <div class="msg-bubble">
+                    <p>Hello Alex! 🎓 I'm <strong>Ollie</strong>, your CampusCash AI Financial Coach.</p>
+                    <p>I've analyzed your spending so far: you have <strong>KES 26,500</strong> left across your wallets with <strong>12 weeks</strong> to go. Ask me anything about cutting costs, campus business ideas, or building an emergency cushion!</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Quick Topic Chips -->
+              <div class="chat-suggestions">
+                <button class="chip" onclick="sendQuickAiQuery('Can I afford a weekend outing of KES 2,500 with my current balance?')">
+                  🎉 Can I afford KES 2,500 outing?
+                </button>
+                <button class="chip" onclick="sendQuickAiQuery('What are the best low-capital side hustles for uni students in Kenya?')">
+                  💼 Top campus side-hustles
+                </button>
+                <button class="chip" onclick="sendQuickAiQuery('Explain how Money Market Funds (MMFs) like Sanlam, CIC, or Etica work for students')">
+                  📈 Best Student MMFs & Savings
+                </button>
+                <button class="chip" onclick="sendQuickAiQuery('Give me a survival meal budget for KES 1,500 a week in the hostel')">
+                  🍲 KES 1,500/week hostel meal plan
+                </button>
+              </div>
+
+              <!-- Chat Input Box -->
+              <div class="chat-input-wrapper">
+                <input type="text" id="aiChatInput" placeholder="Ask Ollie: e.g. 'Should I buy a refurbished monitor for 6k?'" />
+                <button class="btn-primary" id="sendAiChatBtn">
+                  <i class="fa-solid fa-paper-plane"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- Right: Rule-Based Budgeting Guidelines & Side-Hustle Directory -->
+            <div class="ai-knowledge-column">
+              
+              <!-- Card: Smart Rule-Based Guidelines -->
+              <div class="dash-card mb-4">
+                <div class="card-header">
+                  <div class="card-title-group">
+                    <i class="fa-solid fa-scale-balanced text-blue"></i>
+                    <h3>The 50/30/20 Campus Rule</h3>
+                  </div>
+                </div>
+                <div class="budget-rule-item">
+                  <div class="rule-title">
+                    <span class="dot dot-blue"></span>
+                    <strong>50% Survival Needs (KES 20,000)</strong>
+                  </div>
+                  <p class="text-sm">Hostel rent, mess food, essential toiletries, medicals.</p>
+                </div>
+                <div class="budget-rule-item">
+                  <div class="rule-title">
+                    <span class="dot dot-cyan"></span>
+                    <strong>30% Academic & Study (KES 12,000)</strong>
+                  </div>
+                  <p class="text-sm">Printing, handouts, Wi-Fi bundles, lab equipment.</p>
+                </div>
+                <div class="budget-rule-item">
+                  <div class="rule-title">
+                    <span class="dot dot-emerald"></span>
+                    <strong>20% Savings & Hustle Capital (KES 8,000)</strong>
+                  </div>
+                  <p class="text-sm">Emergency safety cushion or invested in Money Market Funds.</p>
+                </div>
+              </div>
+
+              <!-- Card: Verified Student Side-Hustle Finder -->
+              <div class="dash-card">
+                <div class="card-header">
+                  <div class="card-title-group">
+                    <i class="fa-solid fa-briefcase text-purple"></i>
+                    <h3>Campus Side-Hustle Ideas</h3>
+                  </div>
+                  <span class="badge-pill">Earn on Campus</span>
+                </div>
+                <div class="hustle-item">
+                  <div class="hustle-icon"><i class="fa-solid fa-laptop-code"></i></div>
+                  <div class="hustle-content">
+                    <h5>Tech & Assignment Typing / Formatting</h5>
+                    <p>Format LaTeX reports, CVs, and print for coursemates. Est: <strong>KES 3k–8k/mo</strong></p>
+                  </div>
+                </div>
+                <div class="hustle-item">
+                  <div class="hustle-icon"><i class="fa-solid fa-cookie-bite"></i></div>
+                  <div class="hustle-content">
+                    <h5>Late-Night Hostel Snack Bar</h5>
+                    <p>Stock up on cookies, noodles, and coffee for exam revision nights. Est: <strong>KES 5k–12k/mo</strong></p>
+                  </div>
+                </div>
+                <div class="hustle-item">
+                  <div class="hustle-icon"><i class="fa-solid fa-camera"></i></div>
+                  <div class="hustle-content">
+                    <h5>Campus Event Photography & Reels</h5>
+                    <p>Shoot club meetings, sports days, and student birthdays. Est: <strong>KES 10k+/mo</strong></p>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+        </section>
+
+
+        <!-- SECTION 6: OFFLINE USSD & SMS SIMULATOR TAB -->
+        <section class="tab-pane" id="tab-ussd-simulator">
+          <div class="section-top-bar">
+            <div>
+              <h2>Offline USSD (*384*45#) & SMS Access</h2>
+              <p class="section-desc">Designed for students with zero data bundles or basic feature phones (Kabambe). No internet required!</p>
+            </div>
+            <span class="badge-pill"><i class="fa-solid fa-tower-cell"></i> Africa's Talking / USSD Gateway</span>
+          </div>
+
+          <div class="ussd-simulation-layout">
+            
+            <!-- Left: Interactive Phone Mockup -->
+            <div class="phone-mockup-wrapper">
+              <div class="phone-device">
+                <div class="phone-earpiece"></div>
+                <div class="phone-screen">
+                  
+                  <!-- USSD Dialog Box Screen -->
+                  <div class="ussd-screen-content" id="ussdScreenContent">
+                    <div class="ussd-header-badge">
+                      <i class="fa-solid fa-tower-broadcast"></i> SAFARICOM / AIRTEL
+                    </div>
+                    <div class="ussd-text" id="ussdDisplayText">
+                      <strong>CampusCash USSD Service</strong><br/>
+                      Welcome Alex Kimani!<br/>
+                      1. Check Balance & Upkeep Runway<br/>
+                      2. View Semester Goals<br/>
+                      3. Quick Log Expense (e.g. Lunch)<br/>
+                      4. Get Budget Advice via SMS<br/>
+                      5. Mini Statement<br/>
+                      0. Exit
+                    </div>
+                    <div class="ussd-input-row">
+                      <input type="text" id="ussdUserInput" placeholder="Enter option (1-5)" maxlength="10" />
+                      <div class="ussd-btn-group">
+                        <button class="ussd-cancel-btn" id="ussdCancelBtn">Cancel</button>
+                        <button class="ussd-send-btn" id="ussdSendBtn">Send</button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- SMS Inbox Simulation Tab on Phone -->
+                  <div class="phone-sms-inbox" id="phoneSmsInbox">
+                    <div class="sms-inbox-header">
+                      <i class="fa-solid fa-envelope"></i> SMS Alerts (CampusCash)
+                    </div>
+                    <div class="sms-messages-list" id="simulatedSmsList">
+                      <div class="sms-card">
+                        <span class="sms-sender">CAMPUSCASH:</span>
+                        <p class="sms-text">Alert: KES 350 spent on Food & Mess via M-Pesa. Remaining Upkeep Runway: 84 days. Safe daily spend: KES 315.</p>
+                        <span class="sms-time">10:42 AM</span>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+
+                <!-- Phone Keypad -->
+                <div class="phone-keypad">
+                  <div class="keypad-row">
+                    <button class="keypad-key" onclick="pressKeypad('1')">1</button>
+                    <button class="keypad-key" onclick="pressKeypad('2')">2</button>
+                    <button class="keypad-key" onclick="pressKeypad('3')">3</button>
+                  </div>
+                  <div class="keypad-row">
+                    <button class="keypad-key" onclick="pressKeypad('4')">4</button>
+                    <button class="keypad-key" onclick="pressKeypad('5')">5</button>
+                    <button class="keypad-key" onclick="pressKeypad('6')">6</button>
+                  </div>
+                  <div class="keypad-row">
+                    <button class="keypad-key" onclick="pressKeypad('7')">7</button>
+                    <button class="keypad-key" onclick="pressKeypad('8')">8</button>
+                    <button class="keypad-key" onclick="pressKeypad('9')">9</button>
+                  </div>
+                  <div class="keypad-row">
+                    <button class="keypad-key" onclick="pressKeypad('*')">*</button>
+                    <button class="keypad-key" onclick="pressKeypad('0')">0</button>
+                    <button class="keypad-key" onclick="pressKeypad('#')">#</button>
+                  </div>
+                  <div class="keypad-row">
+                    <button class="keypad-call-btn" onclick="dialUssdCode('*384*45#')">
+                      <i class="fa-solid fa-phone"></i> Dial *384*45#
+                    </button>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- Right: USSD Information & Features -->
+            <div class="ussd-instructions-card">
+              <div class="dash-card">
+                <div class="card-header">
+                  <div class="card-title-group">
+                    <i class="fa-solid fa-circle-info text-blue"></i>
+                    <h3>How CampusCash USSD & SMS Works</h3>
+                  </div>
+                </div>
+                <div class="info-block">
+                  <h4><i class="fa-solid fa-signal"></i> 100% Offline Capability</h4>
+                  <p>Students without smartphones or internet bundles simply dial <strong>*384*45#</strong> on any GSM network. The session communicates with our Node.js USSD gateway.</p>
+                </div>
+                <div class="info-block">
+                  <h4><i class="fa-solid fa-bolt"></i> Instant Expense Logging</h4>
+                  <p>Buying lunch at the student center? Dial *384*45# -> Option 3 -> Enter 150 -> Selected "Lunch". Your dashboard syncs automatically!</p>
+                </div>
+                <div class="info-block">
+                  <h4><i class="fa-solid fa-comment-sms"></i> Automatic SMS Warning Engine</h4>
+                  <p>When upkeep funds drop below 25%, an SMS alert is dispatched with urgent budgeting instructions.</p>
+                </div>
+                <div class="action-box-light">
+                  <button class="btn-primary full-width" onclick="dialUssdCode('*384*45#')">
+                    <i class="fa-solid fa-play"></i> Launch Demo USSD Session
+                  </button>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+
+        <!-- SECTION 7: REPORTS & EXPORT TAB -->
+        <section class="tab-pane" id="tab-reports">
+          <div class="section-top-bar">
+            <div>
+              <h2>Financial Reports & Exports</h2>
+              <p class="section-desc">Generate official spending summaries for parents, sponsors, or your personal semester review.</p>
+            </div>
+            <div class="action-btn-group">
+              <button class="btn-primary" onclick="exportToCsv()">
+                <i class="fa-solid fa-file-excel"></i> Export to Excel / CSV
+              </button>
+              <button class="btn-outline" onclick="window.print()">
+                <i class="fa-solid fa-print"></i> Print / Save PDF
+              </button>
+            </div>
+          </div>
+
+          <!-- Report Summary Cards -->
+          <div class="report-statement-sheet dash-card" id="printableReport">
+            <div class="statement-header">
+              <div class="statement-brand">
+                <img src="logo.jpg" alt="Logo" class="statement-logo" />
+                <div>
+                  <h3>CampusCash Financial Statement</h3>
+                  <p>University Student Budget & Upkeep Report</p>
+                </div>
+              </div>
+              <div class="statement-meta">
+                <p><strong>Student:</strong> Alex Kimani (CS/2024/0912)</p>
+                <p><strong>Period:</strong> Semester 1, 2026 (Aug – Dec)</p>
+                <p><strong>Generated:</strong> <span id="reportDateStamp">Oct 2026</span></p>
+              </div>
+            </div>
+
+            <hr class="divider" />
+
+            <!-- Summary Table of Income vs Expenses -->
+            <div class="report-financial-summary">
+              <div class="summary-col">
+                <span class="lbl">Gross Inflow (Income & Upkeep)</span>
+                <h3 class="val text-emerald" id="repGrossIncome">KES 45,000.00</h3>
+              </div>
+              <div class="summary-col">
+                <span class="lbl">Gross Outflow (Expenditures)</span>
+                <h3 class="val text-rose" id="repGrossExpense">KES 18,500.00</h3>
+              </div>
+              <div class="summary-col">
+                <span class="lbl">Net Available Reserves</span>
+                <h3 class="val text-blue" id="repNetReserves">KES 26,500.00</h3>
+              </div>
+              <div class="summary-col">
+                <span class="lbl">Semester Budget Health</span>
+                <h3 class="val text-emerald">73% Stable</h3>
+              </div>
+            </div>
+
+            <!-- Spending Breakdown Table -->
+            <h4 class="mt-4 mb-2">Category-Wise Breakdown</h4>
+            <div class="table-responsive">
+              <table class="modern-table">
+                <thead>
+                  <tr>
+                    <th>Category</th>
+                    <th>Transactions</th>
+                    <th>Total Spent (KES)</th>
+                    <th>% of Total Outflow</th>
+                    <th>Status vs Budget</th>
+                  </tr>
+                </thead>
+                <tbody id="reportCategoryTableBody">
+                  <!-- Dynamically populated -->
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Recommendations Footer in Report -->
+            <div class="report-advisor-note">
+              <h5><i class="fa-solid fa-graduation-cap text-blue"></i> Advisor Recommendation:</h5>
+              <p>Alex has maintained good discipline on rent and academics. We advise maintaining a daily food and leisure ceiling of <strong>KES 315/day</strong> for the remaining 12 weeks of Semester 1.</p>
+            </div>
+          </div>
+        </section>
+
+      </main>
+
+      <!-- Footer -->
+      <footer class="app-footer">
+        <div class="footer-inner">
+          <p>&copy; 2026 <strong>CampusCash</strong> – University Student Financial Management System. MIT License.</p>
+          <div class="footer-links">
+            <span>Online Web Dashboard</span>
+            <span>•</span>
+            <span>USSD *384*45#</span>
+            <span>•</span>
+            <span>M-Pesa & Bank Connected</span>
+          </div>
+        </div>
+      </footer>
+
+    </div>
+  </div>
+
+
+  <!-- ================= MODALS & POPUPS ================= -->
+
+  <!-- Modal 1: Add New Transaction -->
+  <div class="modal-backdrop" id="txModal">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 id="txModalTitle"><i class="fa-solid fa-receipt text-blue"></i> Log Transaction</h3>
+        <button class="modal-close-btn" onclick="closeModal('txModal')">&times;</button>
+      </div>
+      <form id="newTxForm" onsubmit="handleTransactionSubmit(event)">
+        <div class="modal-body">
+          <div class="form-row">
+            <div class="form-group flex-1">
+              <label for="txType">Transaction Type:</label>
+              <select id="txType" class="form-control" required onchange="updateCategoryOptions()">
+                <option value="expense">Expense (Money Out)</option>
+                <option value="income">Income (Money In)</option>
+              </select>
+            </div>
+            <div class="form-group flex-1">
+              <label for="txAmount">Amount (KES):</label>
+              <input type="number" id="txAmount" class="form-control" placeholder="e.g. 350" required min="1" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="txTitle">Title / Description:</label>
+            <input type="text" id="txTitle" class="form-control" placeholder="e.g. Campus Cafeteria Lunch" required />
+          </div>
+
+          <div class="form-row">
+            <div class="form-group flex-1">
+              <label for="txCategory">Category:</label>
+              <select id="txCategory" class="form-control" required>
+                <!-- Filled dynamically by updateCategoryOptions() -->
+              </select>
+            </div>
+            <div class="form-group flex-1">
+              <label for="txWallet">Payment Channel / Wallet:</label>
+              <select id="txWallet" class="form-control" required>
+                <option value="M-Pesa">M-Pesa</option>
+                <option value="Airtel Money">Airtel Money</option>
+                <option value="Bank">Bank Account (Equity)</option>
+                <option value="Cash">Cash in Hand</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="txDate">Date & Time:</label>
+            <input type="datetime-local" id="txDate" class="form-control" required />
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn-outline" onclick="closeModal('txModal')">Cancel</button>
+          <button type="submit" class="btn-primary">Save Transaction</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+  <!-- Modal 2: Create / Edit Goal -->
+  <div class="modal-backdrop" id="goalModal">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3><i class="fa-solid fa-bullseye text-emerald"></i> Set Semester Goal</h3>
+        <button class="modal-close-btn" onclick="closeModal('goalModal')">&times;</button>
+      </div>
+      <form id="newGoalForm" onsubmit="handleGoalSubmit(event)">
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="goalName">Goal Name:</label>
+            <input type="text" id="goalName" class="form-control" placeholder="e.g. Next Semester Hostel Rent" required />
+          </div>
+          <div class="form-row">
+            <div class="form-group flex-1">
+              <label for="goalTarget">Target Amount (KES):</label>
+              <input type="number" id="goalTarget" class="form-control" placeholder="e.g. 15000" required min="100" />
+            </div>
+            <div class="form-group flex-1">
+              <label for="goalCurrent">Initial Saved (KES):</label>
+              <input type="number" id="goalCurrent" class="form-control" placeholder="0" min="0" value="0" />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group flex-1">
+              <label for="goalCategory">Goal Category:</label>
+              <select id="goalCategory" class="form-control">
+                <option value="Hostel & Rent">Hostel & Rent</option>
+                <option value="Academics & Books">Academics & Books</option>
+                <option value="Tech & Laptop">Tech & Laptop</option>
+                <option value="Emergency Cushion">Emergency Cushion</option>
+                <option value="Graduation / Trips">Graduation / Trips</option>
+              </select>
+            </div>
+            <div class="form-group flex-1">
+              <label for="goalDeadline">Deadline Date:</label>
+              <input type="date" id="goalDeadline" class="form-control" required />
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn-outline" onclick="closeModal('goalModal')">Cancel</button>
+          <button type="submit" class="btn-primary">Create Goal</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+  <!-- Modal 3: Allocate Money to Goal -->
+  <div class="modal-backdrop" id="allocateGoalModal">
+    <div class="modal-dialog modal-sm">
+      <div class="modal-header">
+        <h3><i class="fa-solid fa-piggy-bank text-emerald"></i> Deposit to Goal</h3>
+        <button class="modal-close-btn" onclick="closeModal('allocateGoalModal')">&times;</button>
+      </div>
+      <form id="allocateGoalForm" onsubmit="handleAllocateGoal(event)">
+        <input type="hidden" id="allocateGoalId" />
+        <div class="modal-body">
+          <p id="allocateGoalTitle" class="text-bold mb-2">Hostel Rent</p>
+          <div class="form-group">
+            <label for="allocateAmount">Deposit Amount (KES):</label>
+            <input type="number" id="allocateAmount" class="form-control" placeholder="e.g. 1500" required min="50" />
+          </div>
+          <div class="form-group">
+            <label for="allocateSourceWallet">Deduct from Wallet:</label>
+            <select id="allocateSourceWallet" class="form-control">
+              <option value="M-Pesa">M-Pesa (Available: KES 8,450)</option>
+              <option value="Airtel Money">Airtel Money (Available: KES 2,100)</option>
+              <option value="Bank">Bank Account (Available: KES 15,000)</option>
+              <option value="Cash">Cash in Pocket (Available: KES 950)</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn-outline" onclick="closeModal('allocateGoalModal')">Cancel</button>
+          <button type="submit" class="btn-primary">Confirm Deposit</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+  <!-- Modal 4: Mascot Brand Logo Selector (10 Options) -->
+  <div class="modal-backdrop" id="mascotModal">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-header">
+        <h3><i class="fa-solid fa-palette text-blue"></i> Choose Your CampusCash Mascot</h3>
+        <button class="modal-close-btn" onclick="closeModal('mascotModal')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p class="text-muted mb-3">Select your preferred academic anime/cartoon companion for financial coaching throughout the semester!</p>
+        <div class="mascot-selection-grid" id="mascotSelectionGrid">
+          <!-- 10 mascot cards populated dynamically with interactive preview -->
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-primary" onclick="closeModal('mascotModal')">Apply Selection</button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Main JavaScript File -->
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,20 @@
+{
+  "name": "campuscash",
+  "version": "1.0.0",
+  "description": "CampusCash - University Student Financial Management System",
+  "main": "server.js",
+  "scripts": {
+    "start": "npx -y http-server . -p 8080 -o",
+    "dev": "npx -y http-server . -p 8080 -c-1",
+    "server": "node server.js"
+  },
+  "keywords": [
+    "student-budget",
+    "campuscash",
+    "ussd",
+    "mpesa",
+    "personal-finance"
+  ],
+  "author": "Alex Kimani & CampusCash Team",
+  "license": "MIT"
+}
