@@ -14,36 +14,10 @@ const DEFAULT_STATE = {
     currentWeek: 4,
     daysRemaining: 84
   },
-  wallets: [
-    { id: 'w1', name: 'M-Pesa', account: '0712 ••• 890', balance: 8450, tag: 'mpesa-tag', synced: '5m ago', type: 'mobile' },
-    { id: 'w2', name: 'Airtel Money', account: '0733 ••• 412', balance: 2100, tag: 'airtel-tag', synced: '1h ago', type: 'mobile' },
-    { id: 'w3', name: 'Equity Student Acc', account: '0140 ••• 992', balance: 15000, tag: 'bank-tag', synced: 'HELB Main', type: 'bank' },
-    { id: 'w4', name: 'Cash in Pocket', account: 'Physical Notes', balance: 950, tag: 'cash-tag', synced: 'Manual update', type: 'cash' }
-  ],
-  goals: [
-    { id: 'g1', name: 'Next Semester Hostel Rent', target: 16000, saved: 11500, deadline: '2026-11-15', category: 'Hostel & Rent', icon: 'fa-house-user' },
-    { id: 'g2', name: '2nd Year Textbooks & Printing', target: 4500, saved: 3200, deadline: '2026-10-30', category: 'Academics & Books', icon: 'fa-book-open' },
-    { id: 'g3', name: 'Laptop SSD & RAM Upgrade', target: 7500, saved: 2800, deadline: '2026-12-10', category: 'Tech & Laptop', icon: 'fa-laptop' },
-    { id: 'g4', name: 'Emergency Upkeep Cushion', target: 10000, saved: 5000, deadline: '2026-12-20', category: 'Emergency Cushion', icon: 'fa-shield-heart' }
-  ],
-  transactions: [
-    { id: 'tx-1', title: 'HELB Upkeep Disbursement', type: 'income', amount: 30000, category: 'Upkeep / Allowance', wallet: 'Bank', date: '2026-09-01T09:00' },
-    { id: 'tx-2', title: 'Monthly Pocket Money from Parents', type: 'income', amount: 10000, category: 'Upkeep / Allowance', wallet: 'M-Pesa', date: '2026-09-15T14:30' },
-    { id: 'tx-3', title: 'Freelance Web Design Gig', type: 'income', amount: 5000, category: 'Side Hustle', wallet: 'M-Pesa', date: '2026-09-28T16:45' },
-    { id: 'tx-4', title: 'Hostel Accommodation Deposit', type: 'expense', amount: 12000, category: 'Hostel & Rent', wallet: 'Bank', date: '2026-09-03T11:20' },
-    { id: 'tx-5', title: 'Student Mess 2-Week Meal Card', type: 'expense', amount: 2400, category: 'Food & Mess', wallet: 'M-Pesa', date: '2026-09-18T12:15' },
-    { id: 'tx-6', title: 'Campus Cafeteria Lunches & Snacks', type: 'expense', amount: 1400, category: 'Food & Mess', wallet: 'M-Pesa', date: '2026-09-25T13:40' },
-    { id: 'tx-7', title: 'Calculus & Data Structures Printing', type: 'expense', amount: 450, category: 'Academics & Books', wallet: 'Cash', date: '2026-09-29T10:10' },
-    { id: 'tx-8', title: 'Safaricom Monthly Student Wi-Fi / Bundles', type: 'expense', amount: 500, category: 'Tech & Bundles', wallet: 'M-Pesa', date: '2026-10-01T08:00' },
-    { id: 'tx-9', title: 'Weekend Movie & Pizza Night', type: 'expense', amount: 1250, category: 'Entertainment', wallet: 'Airtel Money', date: '2026-10-03T20:30' },
-    { id: 'tx-10', title: 'Matatu Commute to Supermarket', type: 'expense', amount: 300, category: 'Transport', wallet: 'Cash', date: '2026-10-05T15:00' },
-    { id: 'tx-11', title: 'Photocopying Past Revision Papers', type: 'expense', amount: 200, category: 'Academics & Books', wallet: 'Cash', date: '2026-10-06T11:45' }
-  ],
-  notifications: [
-    { id: 'n1', title: 'Upkeep Velocity Warning', text: 'You have spent 46% of upkeep in 4 weeks. Slow down dining out!', type: 'warning', time: '1h ago', icon: 'fa-triangle-exclamation' },
-    { id: 'n2', title: 'Goal Deadline Approaching', text: 'Textbooks & Printing goal deadline is in 23 days.', type: 'info', time: '1d ago', icon: 'fa-calendar-day' },
-    { id: 'n3', title: 'M-Pesa Deposit Received', text: 'KES 5,000 from Freelance Web Design recorded.', type: 'info', time: '2d ago', icon: 'fa-circle-check' }
-  ]
+  goals: [],
+  budgets: [],
+  transactions: [],
+  notifications: []
 };
 
 // 10 Curated Academic Mascot Characters
@@ -53,7 +27,7 @@ const MASCOTS = [
     role: 'Chief Wisdom & Budget Guide',
     avatar: 'logo.jpg',
     icon: '🦉',
-    tip: 'Hey Alex! Week 4 is underway. Keep your daily spend under KES 315 to finish the semester strong!',
+    tip: 'Track your spending regularly and keep your semester goals in view.',
     personality: 'Analytical, wise, supportive'
   },
   {
@@ -77,7 +51,7 @@ const MASCOTS = [
     role: 'Automated Math & Runway Engine',
     avatar: 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=100&auto=format&fit=crop&q=60',
     icon: '🤖',
-    tip: 'Beep boop! 84 days remaining in Semester 1. Total liquid reserves: KES 26,500. Algorithm stable.',
+    tip: 'Beep boop! Your current totals are calculated from the transactions you record.',
     personality: 'Precise, robotic-cute, data-driven'
   },
   {
@@ -93,7 +67,7 @@ const MASCOTS = [
     role: 'Hostel Rent & Project Builder',
     avatar: 'https://images.unsplash.com/photo-1564349683136-77e08dba1ef6?w=100&auto=format&fit=crop&q=60',
     icon: '🪵',
-    tip: 'Building your hostel rent dam bit by bit! You are 71% towards your Next Semester Rent target.',
+    tip: 'Build your savings goal step by step and celebrate the progress you make.',
     personality: 'Hardworking, structured, reliable'
   },
   {
@@ -130,8 +104,8 @@ const MASCOTS = [
   }
 ];
 
-// App State container
-let state = loadState();
+// The dashboard initializes only after the authenticated user's data is loaded.
+let state = JSON.parse(JSON.stringify(DEFAULT_STATE));
 
 // USSD State Machine
 let ussdState = {
@@ -140,7 +114,11 @@ let ussdState = {
 };
 
 // ================= INITIALIZATION =================
-document.addEventListener('DOMContentLoaded', () => {
+window.addEventListener('campuscash:ready', () => {
+  state = loadState();
+  state.transactions = window.CampusCash.transactions;
+  state.goals = window.CampusCash.goals;
+  state.budgets = window.CampusCash.budgets;
   initTheme();
   initNavigation();
   initMascots();
@@ -153,10 +131,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Load / Save State from LocalStorage
 function loadState() {
-  const saved = localStorage.getItem('campuscash_state');
+  const saved = localStorage.getItem(`campuscash_state_${window.CampusCash.user.id}`);
   if (saved) {
     try {
-      return JSON.parse(saved);
+      return { ...JSON.parse(JSON.stringify(DEFAULT_STATE)), ...JSON.parse(saved) };
     } catch (e) {
       console.warn('Failed to parse saved state, using default', e);
     }
@@ -165,7 +143,8 @@ function loadState() {
 }
 
 function saveState() {
-  localStorage.setItem('campuscash_state', JSON.stringify(state));
+  const { transactions, goals, budgets, ...personalPreferences } = state;
+  localStorage.setItem(`campuscash_state_${window.CampusCash.user.id}`, JSON.stringify(personalPreferences));
   renderAll();
 }
 
@@ -223,8 +202,6 @@ function initNavigation() {
   document.getElementById('quickAddTxBtn')?.addEventListener('click', () => openNewTxModal());
   document.getElementById('openUssdModalBtn')?.addEventListener('click', () => switchTab('ussd-simulator'));
   document.getElementById('themeToggleBtn')?.addEventListener('click', toggleTheme);
-  document.getElementById('linkAccountModalBtn')?.addEventListener('click', () => switchTab('wallets'));
-  document.getElementById('linkNewWalletBtn')?.addEventListener('click', () => openPromptAddWallet());
   document.getElementById('exportTxCsvBtn')?.addEventListener('click', exportToCsv);
   document.getElementById('openAiRunwayTip')?.addEventListener('click', () => {
     switchTab('ai-advisor');
@@ -254,11 +231,11 @@ function switchTab(tabId) {
   // Update Page Title
   const titles = {
     'overview': 'Financial Dashboard',
-    'wallets': 'Connected Accounts & Wallets',
+    'wallets': 'Payment Methods in Your Records',
     'goals': 'Semester Financial Goals',
     'transactions': 'Income & Expenses Ledger',
-    'ai-advisor': 'CampusAI Financial Coach',
-    'ussd-simulator': 'Offline USSD (*384*45#) & SMS',
+    'ai-advisor': 'CampusCash Budget Guide',
+    'ussd-simulator': 'Browser USSD & SMS Preview',
     'reports': 'Financial Reports & Exports'
   };
 
@@ -382,6 +359,7 @@ function renderAll() {
   renderMetrics();
   renderWallets();
   renderGoals();
+  renderBudgets();
   renderTransactions();
   renderCategoryBreakdown();
   renderReport();
@@ -389,22 +367,18 @@ function renderAll() {
 }
 
 function renderMetrics() {
-  // Total Balance across all wallets
-  const totalBalance = state.wallets.reduce((acc, w) => acc + Number(w.balance), 0);
-  
-  // Total Income
   const totalIncome = state.transactions
     .filter(t => t.type === 'income')
     .reduce((acc, t) => acc + Number(t.amount), 0);
 
-  // Total Expenses
   const totalExpenses = state.transactions
     .filter(t => t.type === 'expense')
     .reduce((acc, t) => acc + Number(t.amount), 0);
+  const totalBalance = totalIncome - totalExpenses;
 
   // Safe daily allowance
   const daysLeft = state.semester.daysRemaining || 84;
-  const safeDaily = daysLeft > 0 ? (totalBalance / daysLeft) : 0;
+  const safeDaily = daysLeft > 0 ? (Math.max(totalBalance, 0) / daysLeft) : 0;
 
   // Update DOM elements
   const balEl = document.getElementById('totalBalanceDisplay');
@@ -419,57 +393,53 @@ function renderMetrics() {
 }
 
 function renderWallets() {
+  const methods = [...new Set(state.transactions.map(transaction => transaction.wallet || 'Other'))]
+    .map(name => ({
+      name,
+      balance: state.transactions
+        .filter(transaction => (transaction.wallet || 'Other') === name)
+        .reduce((balance, transaction) => balance + (transaction.type === 'income' ? 1 : -1) * Number(transaction.amount), 0)
+    }));
   // Overview wallets grid
   const overviewGrid = document.getElementById('walletsOverviewGrid');
   if (overviewGrid) {
-    overviewGrid.innerHTML = state.wallets.map(w => `
+    overviewGrid.innerHTML = methods.length ? methods.map(method => `
       <div class="wallet-pill-card">
         <div class="wallet-top">
           <div class="wallet-brand">
-            <span class="brand-tag ${w.tag}">${w.name}</span>
-            <span class="account-num">${w.account}</span>
+            <span class="brand-tag bank-tag">${escapeHtml(method.name)}</span>
+            <span class="account-num">Manually recorded</span>
           </div>
-          <i class="fa-solid ${w.type === 'bank' ? 'fa-building-columns' : w.type === 'cash' ? 'fa-hand-holding-dollar' : 'fa-signal wallet-status active'}"></i>
+          <i class="fa-solid fa-money-bill-transfer"></i>
         </div>
         <div class="wallet-balance">
           <span class="curr">KES</span>
-          <span class="amt">${formatNumber(w.balance)}</span>
+          <span class="amt">${formatNumber(method.balance)}</span>
         </div>
         <div class="wallet-bottom">
-          <span class="sync-time">${w.synced}</span>
-          <button class="btn-micro" onclick="openWalletAction('${w.id}')">${w.type === 'cash' ? 'Adjust' : 'Top-up'}</button>
+          <span class="sync-time">Net from your recorded transactions</span>
         </div>
       </div>
-    `).join('');
+    `).join('') : '<p class="text-muted p-3">Payment methods from your transactions will appear here. CampusCash does not connect to external accounts.</p>';
   }
 
-  // Full detailed wallets tab
   const detailedGrid = document.getElementById('walletsDetailedGrid');
   if (detailedGrid) {
-    detailedGrid.innerHTML = state.wallets.map(w => `
+    detailedGrid.innerHTML = methods.length ? methods.map(method => `
       <div class="dash-card">
         <div class="card-header">
           <div class="card-title-group">
-            <span class="brand-tag ${w.tag}" style="font-size:0.85rem; padding:0.3rem 0.6rem;">${w.name}</span>
-            <h4>${w.account}</h4>
+            <span class="brand-tag bank-tag" style="font-size:0.85rem; padding:0.3rem 0.6rem;">${escapeHtml(method.name)}</span>
           </div>
-          <span class="badge-tag tag-income"><i class="fa-solid fa-check"></i> Connected</span>
+          <span class="badge-tag">Manual tracking</span>
         </div>
         <div class="wallet-balance my-3">
           <span class="curr" style="font-size:1rem;">KES</span>
-          <span class="amt" style="font-size:2rem;">${formatNumber(w.balance)}</span>
+          <span class="amt" style="font-size:2rem;">${formatNumber(method.balance)}</span>
         </div>
-        <p class="text-sm text-muted mb-3">Sync Status: <strong>${w.synced}</strong> • Linked for Instant Campus Transfers</p>
-        <div class="d-flex gap-2" style="display:flex; gap:0.5rem;">
-          <button class="btn-primary-gradient btn-sm flex-1" onclick="openDepositToWallet('${w.id}')">
-            <i class="fa-solid fa-arrow-down"></i> Deposit
-          </button>
-          <button class="btn-outline btn-sm flex-1" onclick="openWithdrawFromWallet('${w.id}')">
-            <i class="fa-solid fa-arrow-up"></i> Transfer
-          </button>
-        </div>
+        <p class="text-sm text-muted mb-3">Net total of your saved income and expenses tagged with this payment method. No account is linked or synced.</p>
       </div>
-    `).join('');
+    `).join('') : '<div class="dash-card text-muted">No payment methods recorded yet. Add a transaction to begin.</div>';
   }
 }
 
@@ -481,17 +451,28 @@ function renderGoals() {
   const savedEl = document.getElementById('goalsTotalSaved');
   if (targetEl) targetEl.textContent = formatMoney(totalTarget);
   if (savedEl) savedEl.textContent = formatMoney(totalSaved);
+  const nearest = state.goals
+    .filter(goal => goal.deadline)
+    .sort((a, b) => new Date(a.deadline) - new Date(b.deadline))[0];
+  const nearestEl = document.getElementById('goalsNearestDeadline');
+  if (nearestEl) nearestEl.textContent = nearest ? nearest.name : 'No deadline';
+  const nearestDaysEl = nearestEl?.parentElement?.querySelector('.metric-sublabel');
+  if (nearestDaysEl) {
+    nearestDaysEl.textContent = nearest
+      ? `Due ${new Date(`${nearest.deadline}T00:00:00`).toLocaleDateString('en-KE', { month: 'short', day: 'numeric' })}`
+      : 'Add a deadline to a savings goal';
+  }
 
   // Spotlight on dashboard
   const spotlight = document.getElementById('goalsSpotlightList');
   if (spotlight) {
-    spotlight.innerHTML = state.goals.slice(0, 3).map(g => {
+    spotlight.innerHTML = state.goals.length ? state.goals.slice(0, 3).map(g => {
       const pct = Math.min(100, Math.round((g.saved / g.target) * 100));
       return `
         <div class="goal-mini-card">
           <div class="goal-mini-header">
-            <span class="goal-mini-title"><i class="fa-solid ${g.icon} text-blue"></i> ${g.name}</span>
-            <span class="goal-mini-deadline">Due: ${g.deadline}</span>
+            <span class="goal-mini-title"><i class="fa-solid ${g.icon} text-blue"></i> ${escapeHtml(g.name)}</span>
+            <span class="goal-mini-deadline">Due: ${escapeHtml(g.deadline)}</span>
           </div>
           <div class="progress-bar-bg mt-2">
             <div class="progress-bar-fill" style="width: ${pct}%;"></div>
@@ -502,13 +483,13 @@ function renderGoals() {
           </div>
         </div>
       `;
-    }).join('');
+    }).join('') : '<p class="text-sm text-muted">Create a savings goal to see your progress here.</p>';
   }
 
   // Full Goals Grid
   const fullGrid = document.getElementById('goalsFullGrid');
   if (fullGrid) {
-    fullGrid.innerHTML = state.goals.map(g => {
+    fullGrid.innerHTML = state.goals.length ? state.goals.map(g => {
       const pct = Math.min(100, Math.round((g.saved / g.target) * 100));
       const isComplete = pct >= 100;
       return `
@@ -516,8 +497,8 @@ function renderGoals() {
           <div class="goal-card-header">
             <div>
               <div class="goal-icon-badge"><i class="fa-solid ${g.icon}"></i></div>
-              <h3>${g.name}</h3>
-              <span class="badge-pill mt-1">${g.category}</span>
+              <h3>${escapeHtml(g.name)}</h3>
+                  <span class="badge-pill mt-1">${escapeHtml(g.category)}</span>
             </div>
             <span class="badge-tag ${isComplete ? 'tag-income' : 'status-warning'}">
               ${isComplete ? 'Goal Reached 🎉' : `${pct}% Done`}
@@ -534,14 +515,109 @@ function renderGoals() {
           </div>
 
           <div class="goal-footer">
-            <span class="text-sm text-muted"><i class="fa-regular fa-clock"></i> Target Date: ${g.deadline}</span>
+            <span class="text-sm text-muted"><i class="fa-regular fa-clock"></i> Target Date: ${escapeHtml(g.deadline)}</span>
             <button class="btn-primary btn-sm" onclick="openAllocateMoneyModal('${g.id}')">
               <i class="fa-solid fa-plus"></i> Add Money
             </button>
           </div>
         </div>
       `;
-    }).join('');
+    }).join('') : '<p class="text-muted">No savings goals yet. Create one to start tracking a target.</p>';
+  }
+}
+
+function renderBudgets() {
+  const container = document.getElementById('budgetList');
+  if (!container) return;
+  if (!state.budgets.length) {
+    container.innerHTML = '<p class="text-muted p-3">No category budgets yet. Add one to start comparing your plan with recorded expenses.</p>';
+    return;
+  }
+  const periodStart = period => {
+    const start = new Date();
+    start.setHours(0, 0, 0, 0);
+    if (period === 'weekly') start.setDate(start.getDate() - ((start.getDay() + 6) % 7));
+    else if (period === 'monthly') start.setDate(1);
+    else return null;
+    return start;
+  };
+  container.innerHTML = state.budgets.map(budget => {
+    const start = periodStart(budget.period);
+    const spent = state.transactions
+      .filter(transaction => transaction.type === 'expense' &&
+        transaction.category === budget.category &&
+        (!start || new Date(transaction.date) >= start))
+      .reduce((total, transaction) => total + Number(transaction.amount), 0);
+    const percentage = Math.min(100, Math.round((spent / Number(budget.budget_amount)) * 100));
+    const periodLabel = budget.period === 'weekly' ? 'This week' : budget.period === 'monthly' ? 'This month' : 'Recorded to date';
+    return `
+      <article class="budget-row">
+        <div class="budget-row-title"><strong>${escapeHtml(budget.category)}</strong><span>${periodLabel}</span></div>
+        <div class="budget-progress"><div class="progress-bar-bg"><div class="progress-bar-fill" style="width:${percentage}%;"></div></div><small>${formatMoney(spent)} / ${formatMoney(budget.budget_amount)}</small></div>
+        <div class="budget-row-actions">
+          <button type="button" class="btn-icon-sm" onclick="editBudget('${budget.id}')" aria-label="Edit ${escapeHtml(budget.category)} budget"><i class="fa-solid fa-pen"></i></button>
+          <button type="button" class="btn-icon-sm" onclick="deleteBudget('${budget.id}')" aria-label="Delete ${escapeHtml(budget.category)} budget"><i class="fa-solid fa-trash-can"></i></button>
+        </div>
+      </article>
+    `;
+  }).join('');
+}
+
+function openBudgetModal(budget) {
+  const form = document.getElementById('budgetForm');
+  form.reset();
+  document.getElementById('budgetId').value = budget?.id || '';
+  document.getElementById('budgetCategory').value = budget?.category || 'Food & Mess';
+  document.getElementById('budgetAmount').value = budget?.budget_amount || '';
+  document.getElementById('budgetPeriod').value = budget?.period || 'monthly';
+  document.getElementById('budgetModalTitle').textContent = budget ? 'Edit Category Budget' : 'Set Category Budget';
+  openModal('budgetModal');
+}
+
+function editBudget(id) {
+  const budget = state.budgets.find(item => item.id === id);
+  if (budget) openBudgetModal(budget);
+}
+
+async function saveBudget(event) {
+  event.preventDefault();
+  const category = document.getElementById('budgetCategory').value;
+  const amount = Number(document.getElementById('budgetAmount').value);
+  const period = document.getElementById('budgetPeriod').value;
+  if (!Number.isFinite(amount) || amount <= 0) {
+    showToast('Enter a budget amount greater than zero.', 'error');
+    return;
+  }
+  const submit = document.querySelector('#budgetForm [type="submit"]');
+  const originalLabel = submit.textContent;
+  submit.disabled = true;
+  submit.textContent = 'Saving…';
+  try {
+    const id = document.getElementById('budgetId').value;
+    const saved = await window.CampusCash.saveBudget({ id, category, amount, period });
+    state.budgets = state.budgets.filter(item => item.id !== saved.id && !(item.category === saved.category && item.period === saved.period));
+    state.budgets.push(saved);
+    saveState();
+    closeModal('budgetModal');
+    showToast('Budget saved.', 'success');
+  } catch (error) {
+    showToast(`Budget was not saved: ${error.message}`, 'error');
+  } finally {
+    submit.disabled = false;
+    submit.textContent = originalLabel;
+  }
+}
+
+async function deleteBudget(id) {
+  const budget = state.budgets.find(item => item.id === id);
+  if (!budget || !confirm(`Delete the ${budget.category} budget?`)) return;
+  try {
+    await window.CampusCash.deleteBudget(id);
+    state.budgets = state.budgets.filter(item => item.id !== id);
+    saveState();
+    showToast('Budget deleted.', 'info');
+  } catch (error) {
+    showToast(`Budget was not deleted: ${error.message}`, 'error');
   }
 }
 
@@ -550,19 +626,20 @@ function renderTransactions() {
   const allTable = document.getElementById('allTransactionsTableBody');
 
   const sortedTx = [...state.transactions].sort((a, b) => new Date(b.date) - new Date(a.date));
+  const recentTransactions = sortedTx.slice(0, 5);
 
   // Dashboard Recent 5
   if (recentTable) {
-    recentTable.innerHTML = sortedTx.slice(0, 5).map(tx => `
+    recentTable.innerHTML = recentTransactions.length ? recentTransactions.map(tx => `
       <tr>
         <td>
           <div class="tx-icon-pill">
             <i class="fa-solid ${tx.type === 'income' ? 'fa-arrow-down text-emerald' : 'fa-arrow-up text-rose'}"></i>
-            <span>${tx.title}</span>
+            <span>${escapeHtml(tx.title)}</span>
           </div>
         </td>
-        <td><span class="badge-pill">${tx.wallet}</span></td>
-        <td><span class="badge-pill">${tx.category}</span></td>
+        <td><span class="badge-pill">${escapeHtml(tx.wallet || 'Other')}</span></td>
+        <td><span class="badge-pill">${escapeHtml(tx.category)}</span></td>
         <td class="text-muted text-sm">${formatDate(tx.date)}</td>
         <td class="text-right text-bold ${tx.type === 'income' ? 'text-emerald' : 'text-rose'}">
           ${tx.type === 'income' ? '+' : '-'}${formatMoney(tx.amount)}
@@ -573,7 +650,7 @@ function renderTransactions() {
           </button>
         </td>
       </tr>
-    `).join('');
+    `).join('') : '<tr><td colspan="6" class="text-center text-muted" style="padding: 2rem;">No transactions yet. Add your first income or expense to see it here.</td></tr>';
   }
 
   // All Transactions with Filters
@@ -582,13 +659,18 @@ function renderTransactions() {
     const typeVal = document.getElementById('txTypeFilter')?.value || 'all';
     const catVal = document.getElementById('txCategoryFilter')?.value || 'all';
     const wallVal = document.getElementById('txWalletFilter')?.value || 'all';
+    const fromDate = document.getElementById('txDateFromFilter')?.value || '';
+    const toDate = document.getElementById('txDateToFilter')?.value || '';
 
     const filtered = sortedTx.filter(tx => {
       const matchesSearch = tx.title.toLowerCase().includes(searchVal) || tx.category.toLowerCase().includes(searchVal);
       const matchesType = typeVal === 'all' || tx.type === typeVal;
       const matchesCat = catVal === 'all' || tx.category === catVal;
       const matchesWall = wallVal === 'all' || tx.wallet === wallVal;
-      return matchesSearch && matchesType && matchesCat && matchesWall;
+      const localDate = new Date(tx.date);
+      const txDay = `${localDate.getFullYear()}-${String(localDate.getMonth() + 1).padStart(2, '0')}-${String(localDate.getDate()).padStart(2, '0')}`;
+      const matchesDate = (!fromDate || txDay >= fromDate) && (!toDate || txDay <= toDate);
+      return matchesSearch && matchesType && matchesCat && matchesWall && matchesDate;
     });
 
     const infoEl = document.getElementById('txCountInfo');
@@ -605,18 +687,21 @@ function renderTransactions() {
           <div class="tx-icon-pill">
             <i class="fa-solid ${tx.type === 'income' ? 'fa-arrow-down-left text-emerald' : 'fa-arrow-up-right text-rose'}"></i>
             <div>
-              <div class="text-bold">${tx.title}</div>
+              <div class="text-bold">${escapeHtml(tx.title)}</div>
             </div>
           </div>
         </td>
         <td><span class="badge-tag ${tx.type === 'income' ? 'tag-income' : 'tag-expense'}">${tx.type.toUpperCase()}</span></td>
-        <td><span class="badge-pill">${tx.category}</span></td>
-        <td><strong>${tx.wallet}</strong></td>
+        <td><span class="badge-pill">${escapeHtml(tx.category)}</span></td>
+        <td><strong>${escapeHtml(tx.wallet || 'Other')}</strong></td>
         <td class="text-muted text-sm">${formatDateTime(tx.date)}</td>
         <td class="text-right text-bold ${tx.type === 'income' ? 'text-emerald' : 'text-rose'}">
           ${tx.type === 'income' ? '+' : '-'}${formatMoney(tx.amount)}
         </td>
         <td class="text-center">
+          <button class="btn-icon-sm" onclick="editTransaction('${tx.id}')" title="Edit">
+            <i class="fa-solid fa-pen"></i>
+          </button>
           <button class="btn-icon-sm" onclick="deleteTransaction('${tx.id}')" title="Delete">
             <i class="fa-solid fa-trash-can"></i>
           </button>
@@ -649,7 +734,7 @@ function renderCategoryBreakdown() {
   container.innerHTML = categories.map((cat, idx) => `
     <div class="cat-item">
       <div class="cat-info">
-        <span>${cat.name}</span>
+        <span>${escapeHtml(cat.name)}</span>
         <span>${formatMoney(cat.amount)} (${cat.pct}%)</span>
       </div>
       <div class="cat-bar-bg">
@@ -662,7 +747,7 @@ function renderCategoryBreakdown() {
 function renderReport() {
   const grossIncome = state.transactions.filter(t => t.type === 'income').reduce((acc, t) => acc + Number(t.amount), 0);
   const grossExpense = state.transactions.filter(t => t.type === 'expense').reduce((acc, t) => acc + Number(t.amount), 0);
-  const netReserves = state.wallets.reduce((acc, w) => acc + Number(w.balance), 0);
+  const netReserves = grossIncome - grossExpense;
 
   const repInc = document.getElementById('repGrossIncome');
   const repExp = document.getElementById('repGrossExpense');
@@ -670,6 +755,8 @@ function renderReport() {
   if (repInc) repInc.textContent = formatMoney(grossIncome);
   if (repExp) repExp.textContent = formatMoney(grossExpense);
   if (repNet) repNet.textContent = formatMoney(netReserves);
+  const dateStamp = document.getElementById('reportDateStamp');
+  if (dateStamp) dateStamp.textContent = new Date().toLocaleDateString('en-KE', { year: 'numeric', month: 'short', day: 'numeric' });
 
   const reportTable = document.getElementById('reportCategoryTableBody');
   if (reportTable) {
@@ -686,11 +773,11 @@ function renderReport() {
       const pct = grossExpense > 0 ? Math.round((data.sum / grossExpense) * 100) : 0;
       return `
         <tr>
-          <td><strong>${cat}</strong></td>
+          <td><strong>${escapeHtml(cat)}</strong></td>
           <td>${data.count} txns</td>
           <td>${formatMoney(data.sum)}</td>
           <td>${pct}%</td>
-          <td><span class="badge-tag ${pct > 40 ? 'status-warning' : 'tag-income'}">${pct > 40 ? 'Heavy Outflow' : 'Normal'}</span></td>
+          <td><span class="badge-tag ${pct > 40 ? 'status-warning' : 'tag-income'}">${pct > 40 ? 'Large share' : 'Smaller share'}</span></td>
         </tr>
       `;
     }).join('');
@@ -815,27 +902,40 @@ function roundRect(ctx, x, y, width, height, radius) {
 // ================= TRANSACTION & GOAL MODAL HANDLERS =================
 function initEventListeners() {
   // Search & Filter listeners
-  ['txSearchInput', 'txTypeFilter', 'txCategoryFilter', 'txWalletFilter'].forEach(id => {
+  ['txSearchInput', 'txTypeFilter', 'txCategoryFilter', 'txWalletFilter', 'txDateFromFilter', 'txDateToFilter'].forEach(id => {
     document.getElementById(id)?.addEventListener('input', renderTransactions);
     document.getElementById(id)?.addEventListener('change', renderTransactions);
   });
 
-  // STK Push Sim
-  document.getElementById('sendStkPushBtn')?.addEventListener('click', () => {
-    const phone = document.getElementById('stkPhone').value;
-    const amt = document.getElementById('stkAmount').value;
-    const wallet = document.getElementById('stkTargetWallet').value;
-    triggerStkPushSim(wallet, amt, phone);
-  });
 }
 
 function openNewTxModal() {
+  document.getElementById('newTxForm')?.reset();
+  document.getElementById('txId').value = '';
+  document.getElementById('txModalTitle').innerHTML = '<i class="fa-solid fa-receipt text-blue"></i> Log Transaction';
+  document.querySelector('#newTxForm [type="submit"]').textContent = 'Save Transaction';
   const dateInput = document.getElementById('txDate');
   if (dateInput) {
-    const now = new Date();
-    dateInput.value = now.toISOString().slice(0, 16);
+    dateInput.value = new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 16);
   }
   updateCategoryOptions();
+  openModal('txModal');
+}
+
+function editTransaction(id) {
+  const transaction = state.transactions.find(item => item.id === id);
+  if (!transaction) return;
+  document.getElementById('txId').value = transaction.id;
+  document.getElementById('txType').value = transaction.type;
+  document.getElementById('txAmount').value = transaction.amount;
+  document.getElementById('txTitle').value = transaction.title;
+  document.getElementById('txWallet').value = transaction.wallet || 'Other';
+  const date = new Date(transaction.date);
+  document.getElementById('txDate').value = new Date(date.getTime() - date.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
+  updateCategoryOptions();
+  document.getElementById('txCategory').value = transaction.category;
+  document.getElementById('txModalTitle').innerHTML = '<i class="fa-solid fa-pen text-blue"></i> Edit Transaction';
+  document.querySelector('#newTxForm [type="submit"]').textContent = 'Save Changes';
   openModal('txModal');
 }
 
@@ -865,7 +965,7 @@ function updateCategoryOptions() {
   }
 }
 
-function handleTransactionSubmit(e) {
+async function handleTransactionSubmit(e) {
   e.preventDefault();
   const type = document.getElementById('txType').value;
   const amount = parseFloat(document.getElementById('txAmount').value);
@@ -874,28 +974,14 @@ function handleTransactionSubmit(e) {
   const wallet = document.getElementById('txWallet').value;
   const date = document.getElementById('txDate').value;
 
-  if (!title || isNaN(amount) || amount <= 0) {
+  if (!title || !Number.isFinite(amount) || amount <= 0) {
     showToast('Please enter a valid title and amount.', 'error');
     return;
   }
 
-  // Update corresponding wallet balance
-  const targetWallet = state.wallets.find(w => w.name.includes(wallet) || wallet.includes(w.name));
-  if (targetWallet) {
-    if (type === 'expense') {
-      if (targetWallet.balance < amount) {
-        if (!confirm(`Warning: Your ${targetWallet.name} balance is KES ${targetWallet.balance}. Spending KES ${amount} will cause an overdraft. Proceed anyway?`)) {
-          return;
-        }
-      }
-      targetWallet.balance -= amount;
-    } else {
-      targetWallet.balance += amount;
-    }
-  }
-
+  const existingId = document.getElementById('txId').value;
   const newTx = {
-    id: `tx-${Date.now()}`,
+    id: existingId || `tx-${Date.now()}`,
     title,
     type,
     amount,
@@ -904,41 +990,39 @@ function handleTransactionSubmit(e) {
     date: date || new Date().toISOString()
   };
 
-  state.transactions.unshift(newTx);
-
-  // Check for overspending alert trigger
-  if (type === 'expense' && amount > 2000) {
-    state.notifications.unshift({
-      id: `n-${Date.now()}`,
-      title: 'High Single Outflow Alert',
-      text: `Spent KES ${amount} on ${category} (${title}).`,
-      type: 'warning',
-      time: 'Just now',
-      icon: 'fa-bolt'
-    });
+  const submitButton = document.querySelector('#newTxForm [type="submit"]');
+  const originalLabel = submitButton.textContent;
+  submitButton.disabled = true;
+  submitButton.textContent = 'Saving…';
+  try {
+    const savedTransaction = await window.CampusCash.saveTransaction(newTx);
+    state.transactions = state.transactions.filter(tx => tx.id !== savedTransaction.id);
+    state.transactions.unshift(savedTransaction);
+    saveState();
+    closeModal('txModal');
+    document.getElementById('newTxForm').reset();
+    showToast(`Transaction "${title}" ${existingId ? 'updated' : 'added'} successfully!`, 'success');
+  } catch (error) {
+    showToast(`Transaction was not saved: ${error.message}`, 'error');
+  } finally {
+    submitButton.disabled = false;
+    submitButton.textContent = originalLabel;
   }
-
-  saveState();
-  closeModal('txModal');
-  document.getElementById('newTxForm').reset();
-  showToast(`Transaction "${title}" added successfully!`, 'success');
 }
 
-function deleteTransaction(id) {
+async function deleteTransaction(id) {
   const tx = state.transactions.find(t => t.id === id);
   if (!tx) return;
 
   if (confirm(`Delete transaction "${tx.title}" (KES ${tx.amount})?`)) {
-    // Reverse wallet balance impact
-    const targetWallet = state.wallets.find(w => w.name.includes(tx.wallet) || tx.wallet.includes(w.name));
-    if (targetWallet) {
-      if (tx.type === 'expense') targetWallet.balance += Number(tx.amount);
-      else targetWallet.balance -= Number(tx.amount);
+    try {
+      await window.CampusCash.deleteTransaction(id);
+      state.transactions = state.transactions.filter(t => t.id !== id);
+      saveState();
+      showToast('Transaction deleted.', 'info');
+    } catch (error) {
+      showToast(`Transaction was not deleted: ${error.message}`, 'error');
     }
-
-    state.transactions = state.transactions.filter(t => t.id !== id);
-    saveState();
-    showToast('Transaction deleted and balance adjusted.', 'info');
   }
 }
 
@@ -947,7 +1031,7 @@ function openNewGoalModal() {
   openModal('goalModal');
 }
 
-function handleGoalSubmit(e) {
+async function handleGoalSubmit(e) {
   e.preventDefault();
   const name = document.getElementById('goalName').value.trim();
   const target = parseFloat(document.getElementById('goalTarget').value);
@@ -955,8 +1039,8 @@ function handleGoalSubmit(e) {
   const category = document.getElementById('goalCategory').value;
   const deadline = document.getElementById('goalDeadline').value;
 
-  if (!name || isNaN(target) || target <= 0) {
-    showToast('Please enter a valid goal name and target amount.', 'error');
+  if (!name || name.length > 120 || !Number.isFinite(target) || target <= 0 || current < 0 || current > target) {
+    showToast('Enter a goal name, a positive target, and a saved amount no greater than the target.', 'error');
     return;
   }
 
@@ -969,7 +1053,6 @@ function handleGoalSubmit(e) {
   };
 
   const newGoal = {
-    id: `g-${Date.now()}`,
     name,
     target,
     saved: current,
@@ -978,11 +1061,22 @@ function handleGoalSubmit(e) {
     icon: iconMap[category] || 'fa-bullseye'
   };
 
-  state.goals.push(newGoal);
-  saveState();
-  closeModal('goalModal');
-  document.getElementById('newGoalForm').reset();
-  showToast(`Goal "${name}" created!`, 'success');
+  const submitButton = document.querySelector('#newGoalForm [type="submit"]');
+  const originalLabel = submitButton.textContent;
+  submitButton.disabled = true;
+  submitButton.textContent = 'Saving…';
+  try {
+    state.goals.push(await window.CampusCash.saveGoal(newGoal));
+    saveState();
+    closeModal('goalModal');
+    document.getElementById('newGoalForm').reset();
+    showToast(`Goal "${name}" created!`, 'success');
+  } catch (error) {
+    showToast(`Goal was not saved: ${error.message}`, 'error');
+  } finally {
+    submitButton.disabled = false;
+    submitButton.textContent = originalLabel;
+  }
 }
 
 function openAllocateMoneyModal(goalId) {
@@ -990,161 +1084,44 @@ function openAllocateMoneyModal(goalId) {
   if (!goal) return;
 
   document.getElementById('allocateGoalId').value = goalId;
-  document.getElementById('allocateGoalTitle').innerHTML = `Depositing to: <span class="text-blue">${goal.name}</span><br/><small class="text-muted">Target: ${formatMoney(goal.target)} • Current: ${formatMoney(goal.saved)}</small>`;
+  document.getElementById('allocateGoalTitle').innerHTML = `Depositing to: <span class="text-blue">${escapeHtml(goal.name)}</span><br/><small class="text-muted">Target: ${formatMoney(goal.target)} • Current: ${formatMoney(goal.saved)}</small>`;
   
   openModal('allocateGoalModal');
 }
 
-function handleAllocateGoal(e) {
+async function handleAllocateGoal(e) {
   e.preventDefault();
   const goalId = document.getElementById('allocateGoalId').value;
   const amount = parseFloat(document.getElementById('allocateAmount').value);
-  const walletName = document.getElementById('allocateSourceWallet').value;
-
   const goal = state.goals.find(g => g.id === goalId);
-  const wallet = state.wallets.find(w => w.name.includes(walletName) || walletName.includes(w.name));
 
   if (!goal || isNaN(amount) || amount <= 0) {
     showToast('Invalid allocation amount.', 'error');
     return;
   }
 
-  if (wallet && wallet.balance < amount) {
-    showToast(`Insufficient balance in ${wallet.name} (Available: KES ${wallet.balance})`, 'error');
+  if (goal.saved + amount > goal.target) {
+    showToast('That deposit would exceed the goal target.', 'error');
     return;
   }
-
-  if (wallet) wallet.balance -= amount;
-  goal.saved += amount;
-
-  // Record as goal transfer transaction
-  state.transactions.unshift({
-    id: `tx-${Date.now()}`,
-    title: `Allocated to Goal: ${goal.name}`,
-    type: 'expense',
-    amount: amount,
-    category: 'Goal Allocation',
-    wallet: wallet ? wallet.name : 'M-Pesa',
-    date: new Date().toISOString()
-  });
-
-  saveState();
-  closeModal('allocateGoalModal');
-  document.getElementById('allocateGoalForm').reset();
-  showToast(`KES ${amount} saved into ${goal.name}! 🎯`, 'success');
-}
-
-// ================= STK PUSH & WALLET ACTIONS =================
-function triggerStkPushSim(walletType, amount = 1000, phone = '0712 ••• 890') {
-  const preview = document.getElementById('stkStatusText');
-  if (preview) {
-    preview.innerHTML = `<strong>Sending STK Push to ${phone}...</strong><br/>Please check your mobile phone display.`;
+  const updatedGoal = { ...goal, saved: goal.saved + amount };
+  const submitButton = document.querySelector('#allocateGoalForm [type="submit"]');
+  const originalLabel = submitButton.textContent;
+  submitButton.disabled = true;
+  submitButton.textContent = 'Saving…';
+  try {
+    const savedGoal = await window.CampusCash.updateGoal(updatedGoal);
+    state.goals = state.goals.map(item => item.id === goalId ? savedGoal : item);
+    saveState();
+    closeModal('allocateGoalModal');
+    document.getElementById('allocateGoalForm').reset();
+    showToast(`KES ${amount} added to ${goal.name}'s savings goal.`, 'success');
+  } catch (error) {
+    showToast(`Savings progress was not updated: ${error.message}`, 'error');
+  } finally {
+    submitButton.disabled = false;
+    submitButton.textContent = originalLabel;
   }
-
-  showToast(`[STK Push] Sent KES ${amount} prompt to ${phone}`, 'info');
-
-  setTimeout(() => {
-    const pinEntered = confirm(`[Phone Screen Simulator]\n\nDo you want to pay KES ${amount} to CampusCash Student Wallet via ${walletType}?\n\nEnter M-Pesa PIN: ****\n\nClick OK to authorize deposit.`);
-    
-    if (pinEntered) {
-      const target = state.wallets.find(w => w.name.includes(walletType) || walletType.includes(w.name)) || state.wallets[0];
-      target.balance += Number(amount);
-      
-      state.transactions.unshift({
-        id: `tx-${Date.now()}`,
-        title: `${walletType} Top-up Deposit`,
-        type: 'income',
-        amount: Number(amount),
-        category: 'Upkeep / Allowance',
-        wallet: target.name,
-        date: new Date().toISOString()
-      });
-
-      saveState();
-
-      if (preview) {
-        preview.innerHTML = `<span class="text-emerald"><strong>Success!</strong> KES ${amount} received and credited to ${target.name}.</span>`;
-      }
-      showToast(`Success! Credited KES ${amount} to ${target.name}`, 'success');
-    }
-  }, 600);
-}
-
-function openDepositToWallet(walletId) {
-  const wallet = state.wallets.find(w => w.id === walletId);
-  if (!wallet) return;
-  const amtStr = prompt(`Deposit money to ${wallet.name} (Enter KES amount):`, '1000');
-  if (amtStr) {
-    const amt = parseFloat(amtStr);
-    if (!isNaN(amt) && amt > 0) {
-      triggerStkPushSim(wallet.name, amt, wallet.account);
-    }
-  }
-}
-
-function openWithdrawFromWallet(walletId) {
-  const wallet = state.wallets.find(w => w.id === walletId);
-  if (!wallet) return;
-  const amtStr = prompt(`Transfer / Withdraw from ${wallet.name} (Available: KES ${wallet.balance}):`, '500');
-  if (amtStr) {
-    const amt = parseFloat(amtStr);
-    if (!isNaN(amt) && amt > 0) {
-      if (wallet.balance < amt) {
-        showToast('Insufficient wallet balance', 'error');
-        return;
-      }
-      wallet.balance -= amt;
-      state.transactions.unshift({
-        id: `tx-${Date.now()}`,
-        title: `Withdrawal / Transfer from ${wallet.name}`,
-        type: 'expense',
-        amount: amt,
-        category: 'Transport',
-        wallet: wallet.name,
-        date: new Date().toISOString()
-      });
-      saveState();
-      showToast(`KES ${amt} withdrawn from ${wallet.name}`, 'info');
-    }
-  }
-}
-
-function openWalletAction(walletId) {
-  const wallet = state.wallets.find(w => w.id === walletId);
-  if (!wallet) return;
-  if (wallet.type === 'cash') {
-    const newBalStr = prompt(`Enter exact cash amount in your wallet/pocket (KES):`, wallet.balance);
-    if (newBalStr !== null) {
-      const newBal = parseFloat(newBalStr);
-      if (!isNaN(newBal) && newBal >= 0) {
-        wallet.balance = newBal;
-        saveState();
-        showToast('Cash balance updated!', 'success');
-      }
-    }
-  } else {
-    openDepositToWallet(walletId);
-  }
-}
-
-function openPromptAddWallet() {
-  const name = prompt('Enter New Account / Channel Name (e.g. KCB Student Bank, Co-op, Cash):');
-  if (!name) return;
-  const acc = prompt('Enter Account or Phone Number:', '0110 ••• 123');
-  const bal = parseFloat(prompt('Initial Balance (KES):', '0')) || 0;
-
-  state.wallets.push({
-    id: `w-${Date.now()}`,
-    name,
-    account: acc || 'Custom Channel',
-    balance: bal,
-    tag: 'bank-tag',
-    synced: 'Connected',
-    type: 'bank'
-  });
-
-  saveState();
-  showToast(`Wallet ${name} linked!`, 'success');
 }
 
 // ================= OFFLINE USSD SIMULATOR ENGINE (*384*45#) =================
@@ -1171,7 +1148,7 @@ function initUssdSimulator() {
 function dialUssdCode(code) {
   switchTab('ussd-simulator');
   resetUssdMenu();
-  showToast(`Dialed ${code} via USSD Gateway...`, 'info');
+  showToast(`Opened the browser-based USSD simulator for ${code}.`, 'info');
 }
 
 function pressKeypad(key) {
@@ -1188,7 +1165,7 @@ function resetUssdMenu() {
   if (display) {
     display.innerHTML = `
       <strong>CampusCash USSD Gateway</strong><br/>
-      Welcome Alex Kimani!<br/>
+      Welcome to CampusCash!<br/>
       1. Check Balance & Upkeep Runway<br/>
       2. View Semester Goals<br/>
       3. Quick Log Expense (e.g. Lunch)<br/>
@@ -1203,7 +1180,7 @@ function resetUssdMenu() {
   }
 }
 
-function handleUssdInput() {
+async function handleUssdInput() {
   const inputEl = document.getElementById('ussdUserInput');
   const displayEl = document.getElementById('ussdDisplayText');
   if (!inputEl || !displayEl) return;
@@ -1214,20 +1191,21 @@ function handleUssdInput() {
   if (ussdState.currentMenu === 'main') {
     switch (val) {
       case '1': {
-        const totalBal = state.wallets.reduce((acc, w) => acc + Number(w.balance), 0);
-        const daily = Math.round(totalBal / (state.semester.daysRemaining || 84));
+        const totalBal = state.transactions.reduce((balance, transaction) =>
+          balance + (transaction.type === 'income' ? 1 : -1) * Number(transaction.amount), 0);
+        const daily = Math.round(Math.max(totalBal, 0) / (state.semester.daysRemaining || 84));
         displayEl.innerHTML = `
           <strong>CampusCash Balance Check</strong><br/>
           Total Balance: KES ${formatNumber(totalBal)}<br/>
-          Runway: ${state.semester.daysRemaining} days left<br/>
-          Safe Daily Cap: KES ${daily}/day<br/><br/>
+          Example ${state.semester.daysRemaining}-day estimate: KES ${daily}/day<br/>
+          This is based on your recorded transactions, not a live balance.<br/><br/>
           0. Back to Main Menu
         `;
         ussdState.currentMenu = 'sub';
         break;
       }
       case '2': {
-        let goalsTxt = state.goals.map((g, i) => `${i+1}. ${g.name}: KES ${g.saved}/${g.target}`).join('<br/>');
+        let goalsTxt = state.goals.map((g, i) => `${i+1}. ${escapeHtml(g.name)}: KES ${g.saved}/${g.target}`).join('<br/>');
         displayEl.innerHTML = `
           <strong>Semester Goals Progress:</strong><br/>
           ${goalsTxt}<br/><br/>
@@ -1247,10 +1225,10 @@ function handleUssdInput() {
         break;
       }
       case '4': {
-        dispatchSimulatedSms("CampusCash Advisor: You have 84 days left. Stick to mess meals instead of fast food to preserve KES 3,500 this month!");
+        dispatchSimulatedSms("Sample budget reminder. No text message is sent by this browser-based simulator.");
         displayEl.innerHTML = `
-          <strong>Budget Tip Dispatched!</strong><br/>
-          An SMS with personalized budget advice has been sent to your phone.<br/><br/>
+          <strong>Sample Budget Tip</strong><br/>
+          This is a local simulator preview. No SMS has been sent.<br/><br/>
           0. Back
         `;
         ussdState.currentMenu = 'sub';
@@ -1305,12 +1283,12 @@ function handleUssdInput() {
       '3': 'Transport',
       '4': 'Tech & Bundles'
     };
-    const cat = catMap[val] || 'Food & Mess';
+    const cat = catMap[val];
+    if (!cat) {
+      displayEl.innerHTML = `Choose 1, 2, 3 or 4, or enter 0 to cancel.`;
+      return;
+    }
     const amt = ussdState.tempExpense.amount;
-
-    // Deduct from M-Pesa / Cash
-    const wallet = state.wallets[0]; // M-Pesa default
-    wallet.balance -= amt;
 
     const newTx = {
       id: `tx-${Date.now()}`,
@@ -1322,18 +1300,17 @@ function handleUssdInput() {
       date: new Date().toISOString()
     };
 
-    state.transactions.unshift(newTx);
-    saveState();
-
-    dispatchSimulatedSms(`Alert: KES ${amt} logged for ${cat} via USSD (*384*45#). M-Pesa Balance: KES ${wallet.balance}.`);
-
-    displayEl.innerHTML = `
-      <strong>Success!</strong><br/>
-      KES ${amt} for ${cat} recorded.<br/>
-      New Balance: KES ${formatNumber(wallet.balance)}<br/><br/>
-      0. Main Menu
-    `;
-    ussdState.currentMenu = 'sub';
+    try {
+      const savedTransaction = await window.CampusCash.saveTransaction(newTx);
+      state.transactions.unshift(savedTransaction);
+      saveState();
+      dispatchSimulatedSms(`Sample preview: KES ${amt} for ${cat} was recorded in your account. No SMS was sent.`);
+      displayEl.innerHTML = `<strong>Recorded</strong><br/>KES ${amt} for ${escapeHtml(cat)} was saved to your transaction history.<br/><br/>0. Main Menu`;
+      ussdState.currentMenu = 'sub';
+    } catch (error) {
+      showToast(`Transaction was not saved: ${error.message}`, 'error');
+      displayEl.innerHTML = `Unable to save this transaction. Please try again or use the dashboard form.<br/><br/>0. Cancel`;
+    }
   } else if (ussdState.currentMenu === 'sub') {
     resetUssdMenu();
   }
@@ -1421,12 +1398,12 @@ function handleAiUserQuery() {
   botMsg.className = 'chat-message bot-msg';
   botMsg.innerHTML = `
     <div class="msg-avatar"><img src="logo.jpg" alt="Bot" /></div>
-    <div class="msg-bubble"><p><i class="fa-solid fa-spinner fa-spin"></i> Analyzing student budget & campus guidelines...</p></div>
+    <div class="msg-bubble">    <p><i class="fa-solid fa-spinner fa-spin"></i> Preparing a general budgeting tip...</p></div>
   `;
   area.appendChild(botMsg);
   area.scrollTop = area.scrollHeight;
 
-  // Generate intelligent response based on student context
+  // Generate a local rule-based budgeting tip.
   setTimeout(() => {
     const reply = generateAiResponse(query);
     botMsg.querySelector('.msg-bubble').innerHTML = reply;
@@ -1436,66 +1413,61 @@ function handleAiUserQuery() {
 
 function generateAiResponse(q) {
   const query = q.toLowerCase();
-  const totalBal = state.wallets.reduce((acc, w) => acc + Number(w.balance), 0);
+  const totalBal = state.transactions.reduce((balance, transaction) =>
+    balance + (transaction.type === 'income' ? 1 : -1) * Number(transaction.amount), 0);
   const daysLeft = state.semester.daysRemaining || 84;
-  const safeDaily = Math.round(totalBal / daysLeft);
+  const safeDaily = Math.round(Math.max(totalBal, 0) / daysLeft);
 
   if (query.includes('side hustle') || query.includes('gig') || query.includes('earn') || query.includes('job')) {
     return `
-      <p>💡 <strong>Top 4 High-Demand Campus Side-Hustles for Kenyan University Students:</strong></p>
+      <p>💡 <strong>Campus work ideas to explore:</strong></p>
       <ul>
-        <li><strong>Academic & CV Typing / LaTeX Formatting:</strong> Charge KES 30–50 per page for final year projects.</li>
-        <li><strong>Late-Night Hostel Snack & Beverage Stash:</strong> Stock Indomie, biscuits, coffee sachets for exam revision hours (30-40% profit margin).</li>
-        <li><strong>Campus Tech Support & Software Installation:</strong> OS installations, SSD upgrades, and troubleshooting for coursemates (KES 500–1,500/gig).</li>
-        <li><strong>Event Photography & Social Media Reels:</strong> Cover student club elections, sports matches, and birthday dinners.</li>
+        <li>Offer tutoring or help with approved academic formatting.</li>
+        <li>Explore campus event photography or design work.</li>
+        <li>Offer tech support if you have the right skills.</li>
       </ul>
-      <p><em>Pro-Tip: Dedicate at most 8–10 hours per week so your GPA remains top tier!</em></p>
+      <p>Check campus rules, agree on scope and payment in advance, and balance work with your studies.</p>
     `;
   }
 
   if (query.includes('mmf') || query.includes('invest') || query.includes('money market') || query.includes('save')) {
     return `
-      <p>📈 <strong>Student Guide to Money Market Funds (MMFs) in Kenya:</strong></p>
-      <p>An MMF is the best vehicle for your semester upkeep and emergency fund because it offers <strong>high liquidity</strong> (withdraw to M-Pesa in 24-48h) and pays <strong>12%–16% p.a. compound interest</strong>.</p>
-      <ul>
-        <li><strong>Popular Student-Friendly Funds:</strong> Sanlam, CIC, Britam, Etica, NCBA, Apollo.</li>
-        <li><strong>Minimum entry:</strong> Many start at just <strong>KES 100 to KES 1,000</strong>.</li>
-        <li><strong>Why not just keep it in M-Pesa?</strong> M-Pesa makes money too easy to impulse spend, and earns 0% interest.</li>
-      </ul>
+      <p>📈 <strong>Compare savings products carefully:</strong></p>
+      <p>Fees, access times, minimum deposits and returns vary by provider and can change. Read current product documents, check that a provider is properly regulated, and consider when you may need the money.</p>
+      <p>This general budgeting guide does not recommend a specific investment or product.</p>
     `;
   }
 
   if (query.includes('meal') || query.includes('cooking') || query.includes('food') || query.includes('1500') || query.includes('hostel')) {
     return `
-      <p>🍲 <strong>Survival Meal Strategy (Under KES 1,500/week):</strong></p>
+      <p>🍲 <strong>Ways to plan food spending:</strong></p>
       <ol>
-        <li><strong>Buy Bulk Dry Foods:</strong> 2kg rice (KES 380), 1kg lentils/ndengu (KES 220), 1 packet maize flour (KES 140).</li>
-        <li><strong>Veggies & Sukuma Wiki:</strong> Buy in small batches from local mama mboga (KES 150/week).</li>
-        <li><strong>Eggs & Milk:</strong> 1 crate shared among roommates brings cost per egg down to KES 14.</li>
-        <li><strong>Mess Lunch:</strong> Eat subsidised student mess lunch (KES 70–100) instead of off-campus fast food (KES 350+).</li>
+        <li>Plan a few meals before shopping.</li>
+        <li>Compare prices and avoid buying more perishables than you can use.</li>
+        <li>Check whether your campus offers meal options that fit your budget.</li>
       </ol>
-      <p>This strategy saves you approximately <strong>KES 4,500 each month</strong>!</p>
+      <p>Prices and savings depend on your location and circumstances.</p>
     `;
   }
 
   if (query.includes('afford') || query.includes('2500') || query.includes('outing') || query.includes('party') || query.includes('trip')) {
-    const pctOfBal = Math.round((2500 / totalBal) * 100);
+      const pctOfBal = totalBal > 0 ? Math.round((2500 / totalBal) * 100) : null;
     return `
       <p>🤔 <strong>Affordability Assessment:</strong></p>
-      <p>Spending <strong>KES 2,500</strong> represents <strong>${pctOfBal}%</strong> of your remaining liquid funds (KES ${formatNumber(totalBal)}).</p>
-      <p>Your safe daily allowance is currently <strong>KES ${safeDaily}/day</strong>. A KES 2,500 outing burns <strong>~8 days worth of daily living budget</strong>!</p>
-      <p><strong>Recommendation:</strong> Cap your outing at <strong>KES 800–1,000</strong> or take on a quick weekend freelancing task to cover the extra fun!</p>
+      <p>${pctOfBal === null ? 'Record your income and expenses to see your current ledger balance.' : `Spending <strong>KES 2,500</strong> represents <strong>${pctOfBal}%</strong> of your recorded net balance (KES ${formatNumber(totalBal)}).`}</p>
+      <p>An equal daily allocation over an example ${daysLeft}-day planning period is <strong>KES ${safeDaily}/day</strong>. This estimate uses only manually recorded transactions and is not a live balance.</p>
+      <p>Compare the cost with upcoming essentials and adjust your personal plan as needed.</p>
     `;
   }
 
   return `
-    <p>🎓 <strong>CampusCash AI Advice:</strong></p>
-    <p>Based on your current numbers: You have <strong>KES ${formatNumber(totalBal)}</strong> available across all wallets with <strong>${daysLeft} days</strong> remaining in the semester.</p>
+    <p>🎓 <strong>CampusCash Budget Guide:</strong></p>
+    <p>Your recorded income minus expenses is <strong>KES ${formatNumber(totalBal)}</strong>. This is a ledger total, not a live bank balance.</p>
     <p>Recommended rule of thumb:</p>
     <ul>
       <li>Set aside your fixed hostel rent and exam handout costs first.</li>
-      <li>Keep daily disposable spending strictly below <strong>KES ${safeDaily}</strong>.</li>
-      <li>If unexpected expenses arise, check our USSD offline dialer or side-hustle directory!</li>
+      <li>An example ${daysLeft}-day allocation of your recorded net total is <strong>KES ${safeDaily}/day</strong>.</li>
+      <li>Review your category budgets and adjust them as your plans change.</li>
     </ul>
   `;
 }
@@ -1510,17 +1482,13 @@ function exportToCsv() {
 
   let csvContent = 'data:text/csv;charset=utf-8,';
   csvContent += 'ID,Title,Type,Category,Payment Method,Amount (KES),Date & Time\n';
+  const csvCell = value => {
+    const text = String(value ?? '').replace(/"/g, '""');
+    return `"${/^\s*[=+\-@]/.test(text) ? "'" : ''}${text}"`;
+  };
 
   transactions.forEach(t => {
-    const row = [
-      `"${t.id}"`,
-      `"${t.title.replace(/"/g, '""')}"`,
-      `"${t.type}"`,
-      `"${t.category}"`,
-      `"${t.wallet}"`,
-      `"${t.amount}"`,
-      `"${t.date}"`
-    ].join(',');
+    const row = [t.id, t.title, t.type, t.category, t.wallet, t.amount, t.date].map(csvCell).join(',');
     csvContent += row + '\n';
   });
 
@@ -1564,10 +1532,7 @@ function showToast(message, type = 'info') {
     info: 'fa-circle-info text-blue'
   };
 
-  toast.innerHTML = `
-    <i class="fa-solid ${iconMap[type] || 'fa-info'}"></i>
-    <span>${message}</span>
-  `;
+  toast.innerHTML = `<i class="fa-solid ${iconMap[type] || 'fa-info'}"></i><span>${escapeHtml(String(message))}</span>`;
 
   container.appendChild(toast);
 
