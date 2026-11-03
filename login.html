@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Log in to your private CampusCash student finance dashboard." />
+  <title>Log in | CampusCash</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="auth-page">
+  <main class="auth-shell">
+    <a class="public-brand auth-brand" href="index.html"><img src="logo.jpg" alt="" /><span>Campus<span>Cash</span></span></a>
+    <section class="auth-card">
+      <a class="auth-back-link" href="index.html"><i class="fa-solid fa-arrow-left"></i> Back to home</a>
+      <span class="public-eyebrow">Welcome back</span>
+      <h1>Log in to CampusCash</h1>
+      <p class="auth-intro">Pick up where you left off with your personal finances.</p>
+      <div id="authMessage" class="auth-message" role="status" aria-live="polite" hidden></div>
+      <form data-auth-form="login" novalidate>
+        <div class="auth-field"><label for="email">Email address</label><input id="email" name="email" type="email" autocomplete="email" required placeholder="you@university.ac.ke" /></div>
+        <div class="auth-field"><div class="auth-label-row"><label for="password">Password</label><button class="auth-inline-button" type="button" id="forgotPassword">Forgot password?</button></div><div class="password-input"><input id="password" name="password" type="password" autocomplete="current-password" required placeholder="Enter your password" /><button type="button" data-toggle-password="password" aria-label="Show password"><i class="fa-regular fa-eye"></i></button></div></div>
+        <label class="remember-option"><input id="rememberMe" type="checkbox" checked /> Keep me signed in on this device</label>
+        <button class="public-button auth-submit" type="submit">Log in <i class="fa-solid fa-arrow-right"></i></button>
+      </form>
+      <form id="resetPasswordForm" hidden novalidate>
+        <div class="auth-field"><label for="newPassword">New password</label><div class="password-input"><input id="newPassword" type="password" autocomplete="new-password" minlength="8" required placeholder="At least 8 characters" /><button type="button" data-toggle-password="newPassword" aria-label="Show password"><i class="fa-regular fa-eye"></i></button></div></div>
+        <div class="auth-field"><label for="confirmNewPassword">Confirm new password</label><div class="password-input"><input id="confirmNewPassword" type="password" autocomplete="new-password" minlength="8" required placeholder="Enter your new password again" /><button type="button" data-toggle-password="confirmNewPassword" aria-label="Show password"><i class="fa-regular fa-eye"></i></button></div></div>
+        <button class="public-button auth-submit" type="submit">Update password <i class="fa-solid fa-arrow-right"></i></button>
+      </form>
+      <p class="auth-switch">New to CampusCash? <a href="register.html">Create an account</a></p>
+    </section>
+    <p class="auth-privacy"><i class="fa-solid fa-shield-halved"></i> Your account and financial records are private.</p>
+  </main>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase.js"></script>
+  <script src="auth.js"></script>
+</body>
+</html>
