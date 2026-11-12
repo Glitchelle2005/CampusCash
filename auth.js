@@ -1,12 +1,9 @@
 (function () {
-  const clientFor = function (storageName) {
-    if (!window.campusCashSupabase) {
-      window.campusCashSupabase = window.createCampusCashClient(storageName);
-    }
-    return window.campusCashSupabase;
-  };
+  const USERS_STORAGE_KEY = 'campuscash_users';
+  const CURRENT_USER_KEY = 'campuscash_current_user';
 
   const formMessage = function (element, message, kind) {
+    if (!element) return;
     element.textContent = message;
     element.className = `auth-message ${kind || ''}`;
     element.hidden = !message;
@@ -16,6 +13,7 @@
     document.querySelectorAll('[data-toggle-password]').forEach(function (button) {
       button.addEventListener('click', function () {
         const input = document.getElementById(button.dataset.togglePassword);
+        if (!input) return;
         const reveal = input.type === 'password';
         input.type = reveal ? 'text' : 'password';
         button.setAttribute('aria-label', reveal ? 'Hide password' : 'Show password');
@@ -24,158 +22,251 @@
     });
   };
 
-  document.addEventListener('DOMContentLoaded', async function () {
-    showPasswordToggles();
-    const form = document.querySelector('[data-auth-form]');
-    const message = document.getElementById('authMessage');
-    let client;
-
+  const hashPassword = async function (password) {
     try {
-      const requestedStorage = form?.dataset.authForm === 'register'
-        ? 'localStorage'
-        : localStorage.getItem('campuscash_session_storage') || 'localStorage';
-      client = clientFor(requestedStorage);
-      if (!form) {
-        const { data: { user }, error } = await client.auth.getUser();
-        if (error) throw error;
-        if (user) window.location.replace('dashboard.html');
-        return;
+      const msgUint8 = new TextEncoder().encode(password);
+      const hashBuffer = await crypto.subtle.digest('SHA-256', msgUint8);
+      return Array.from(new Uint8Array(hashBuffer)).map(b => b.toString(16).padStart(2, '0')).join('');
+    } catch (_) {
+      let hash = 0;
+      for (let i = 0; i < password.length; i++) {
+        hash = ((hash << 5) - hash) + password.charCodeAt(i);
+        hash |= 0;
       }
-    } catch (error) {
-      if (message) formMessage(message, error.message, 'error');
-      if (form) form.querySelectorAll('input, button').forEach(element => element.disabled = true);
-      return;
+      return 'h_' + hash;
     }
+  };
 
-    const type = form.dataset.authForm;
-    const resetForm = document.getElementById('resetPasswordForm');
-    const isPasswordRecovery = new URLSearchParams(window.location.hash.slice(1)).get('type') === 'recovery';
-    if (isPasswordRecovery && resetForm) {
-      form.hidden = true;
-      resetForm.hidden = false;
-      try {
-        const { data: { session }, error } = await client.auth.getSession();
-        if (error) throw error;
-        if (!session) throw new Error('This password reset link is invalid or has expired. Request a new one.');
-        resetForm.addEventListener('submit', async function (event) {
-          event.preventDefault();
-          const password = document.getElementById('newPassword').value;
-          const confirmation = document.getElementById('confirmNewPassword').value;
-          if (password.length < 8) {
-            formMessage(message, 'Use a password with at least 8 characters.', 'error');
-            return;
-          }
-          if (password !== confirmation) {
-            formMessage(message, 'Your passwords do not match.', 'error');
-            return;
-          }
-          const submit = resetForm.querySelector('[type="submit"]');
-          submit.disabled = true;
-          try {
-            const { error: updateError } = await client.auth.updateUser({ password });
-            if (updateError) throw updateError;
-            formMessage(message, 'Your password has been updated. Opening your dashboard…', 'success');
-            window.setTimeout(() => window.location.replace('dashboard.html'), 900);
-          } catch (error) {
-            formMessage(message, error.message || 'Password update failed. Request another reset link.', 'error');
-            submit.disabled = false;
-          }
-        });
-      } catch (error) {
-        formMessage(message, error.message, 'error');
-        resetForm.querySelectorAll('input, button').forEach(element => element.disabled = true);
-      }
-      return;
-    }
+  const getUsers = function () {
     try {
-      const { data: { user }, error } = await client.auth.getUser();
-      if (error) throw error;
-      if (user) {
-        window.location.replace('dashboard.html');
-        return;
-      }
-    } catch (error) {
-      formMessage(message, error.message, 'error');
-      return;
-    }
-    form.addEventListener('submit', async function (event) {
-      event.preventDefault();
-      formMessage(message, '', '');
-      const submit = form.querySelector('[type="submit"]');
-      submit.disabled = true;
-      submit.dataset.originalText = submit.textContent;
-      submit.textContent = type === 'register' ? 'Creating account…' : 'Signing in…';
+      const data = localStorage.getItem(USERS_STORAGE_KEY);
+      if (data) return JSON.parse(data);
+    } catch (_) {}
+    return [];
+  };
 
-      try {
-        const email = document.getElementById('email').value.trim();
-        const password = document.getElementById('password').value;
-        let result;
-        if (type === 'register') {
-          const fullName = document.getElementById('fullName').value.trim();
-          const confirmation = document.getElementById('confirmPassword').value;
-          if (!fullName || !email || !password || !confirmation) throw new Error('Please complete every field.');
-          if (fullName.length < 2 || fullName.length > 120) throw new Error('Your full name must be between 2 and 120 characters.');
-          if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) throw new Error('Enter a valid email address.');
-          if (password.length < 8) throw new Error('Use a password with at least 8 characters.');
-          if (password !== confirmation) throw new Error('Your passwords do not match.');
-          result = await client.auth.signUp({
-            email,
-            password,
-            options: { data: { full_name: fullName } }
-          });
-          if (result.error) throw result.error;
-          if (!result.data.session) {
-            formMessage(message, 'Account created. Check your email to confirm your address, then log in.', 'success');
-          } else {
-            localStorage.setItem('campuscash_session_storage', 'localStorage');
-            window.location.replace('dashboard.html');
-          }
-        } else {
-          if (!email || !password) throw new Error('Enter your email address and password.');
-          if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) throw new Error('Enter a valid email address.');
-          const remember = document.getElementById('rememberMe').checked;
-          const selectedStorage = remember ? 'localStorage' : 'sessionStorage';
-          const previousStorage = localStorage.getItem('campuscash_session_storage') || 'localStorage';
-          if (previousStorage !== selectedStorage) {
-            const { error: signOutError } = await client.auth.signOut({ scope: 'local' });
-            if (signOutError) throw signOutError;
-          }
-          client = window.createCampusCashClient(selectedStorage);
-          result = await client.auth.signInWithPassword({ email, password });
-          if (result.error) throw result.error;
-          localStorage.setItem('campuscash_session_storage', selectedStorage);
-          window.location.replace('dashboard.html');
-        }
-      } catch (error) {
-        formMessage(message, error.message || 'We could not complete that request. Please try again.', 'error');
-      } finally {
-        submit.disabled = false;
-        submit.textContent = submit.dataset.originalText;
-      }
+  const saveUsers = function (users) {
+    localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(users));
+  };
+
+  const findUser = function (users, nameOrUsername) {
+    if (!nameOrUsername) return null;
+    const query = nameOrUsername.trim().toLowerCase();
+    return users.find(u => {
+      const uName = (u.username || '').toLowerCase();
+      const fName = (u.fullName || '').toLowerCase();
+      return uName === query || fName === query || fName.split(' ')[0] === query;
     });
+  };
 
-    const resetButton = document.getElementById('forgotPassword');
-    if (resetButton) {
-      resetButton.addEventListener('click', async function () {
-        formMessage(message, '', '');
-        const email = document.getElementById('email').value.trim();
-        if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-          formMessage(message, 'Enter your email address above, then choose Forgot password.', 'error');
+  const verifyPassword = async function (user, password) {
+    if (user.password && user.password === password) return true;
+    const hashed = await hashPassword(password);
+    return user.passwordHash === hashed;
+  };
+
+  document.addEventListener('DOMContentLoaded', function () {
+    showPasswordToggles();
+
+    // Check if user is already logged in
+    const existingSession = sessionStorage.getItem(CURRENT_USER_KEY) || localStorage.getItem(CURRENT_USER_KEY);
+    if (existingSession) {
+      try {
+        const parsed = JSON.parse(existingSession);
+        if (parsed?.id) {
+          window.location.replace('dashboard.html');
           return;
         }
-        resetButton.disabled = true;
-        try {
-          const { error } = await client.auth.resetPasswordForEmail(email, {
-            redirectTo: `${window.location.origin}${window.location.pathname.replace(/[^/]*$/, '')}login.html`
-          });
-          if (error) throw error;
-          formMessage(message, 'If an account exists for that email, a password reset link is on its way.', 'success');
-        } catch (error) {
-          formMessage(message, error.message || 'Password reset could not be requested. Please try again.', 'error');
-        } finally {
-          resetButton.disabled = false;
+      } catch (_) {}
+    }
+
+    const form = document.querySelector('[data-auth-form]');
+    const message = document.getElementById('authMessage');
+    const resetForm = document.getElementById('resetPasswordForm');
+    const forgotPasswordBtn = document.getElementById('forgotPassword');
+    const cancelResetBtn = document.getElementById('cancelReset');
+
+    if (forgotPasswordBtn && resetForm && form) {
+      forgotPasswordBtn.addEventListener('click', function () {
+        formMessage(message, '', '');
+        form.hidden = true;
+        resetForm.hidden = false;
+        const usernameVal = document.getElementById('username')?.value.trim();
+        const resetUsernameInput = document.getElementById('resetUsername');
+        if (resetUsernameInput && usernameVal) {
+          resetUsernameInput.value = usernameVal;
         }
       });
     }
+
+    if (cancelResetBtn && resetForm && form) {
+      cancelResetBtn.addEventListener('click', function () {
+        formMessage(message, '', '');
+        resetForm.hidden = true;
+        form.hidden = false;
+      });
+    }
+
+    if (resetForm) {
+      resetForm.addEventListener('submit', async function (event) {
+        event.preventDefault();
+        formMessage(message, '', '');
+        const resetUsername = document.getElementById('resetUsername')?.value.trim();
+        const newPassword = document.getElementById('newPassword')?.value;
+        const confirmNewPassword = document.getElementById('confirmNewPassword')?.value;
+
+        if (!resetUsername || !newPassword || !confirmNewPassword) {
+          formMessage(message, 'Please complete all fields.', 'error');
+          return;
+        }
+        if (newPassword.length < 4) {
+          formMessage(message, 'Password must be at least 4 characters.', 'error');
+          return;
+        }
+        if (newPassword !== confirmNewPassword) {
+          formMessage(message, 'Passwords do not match.', 'error');
+          return;
+        }
+
+        const users = getUsers();
+        const user = findUser(users, resetUsername);
+        if (!user) {
+          formMessage(message, `No account found for "${resetUsername}".`, 'error');
+          return;
+        }
+
+        user.passwordHash = await hashPassword(newPassword);
+        delete user.password;
+        saveUsers(users);
+
+        formMessage(message, 'Password updated successfully! You can now log in.', 'success');
+        resetForm.hidden = true;
+        if (form) form.hidden = false;
+        const pwdInput = document.getElementById('password');
+        if (pwdInput) pwdInput.value = '';
+      });
+    }
+
+    if (!form) return;
+    const type = form.dataset.authForm;
+
+    form.addEventListener('submit', async function (event) {
+      event.preventDefault();
+      formMessage(message, '', '');
+
+      const submit = form.querySelector('[type="submit"]');
+      if (submit) {
+        submit.disabled = true;
+        submit.dataset.originalText = submit.innerHTML;
+        submit.textContent = type === 'register' ? 'Creating account…' : 'Signing in…';
+      }
+
+      try {
+        const users = getUsers();
+
+        if (type === 'register') {
+          const fullName = document.getElementById('fullName').value.trim();
+          const password = document.getElementById('password').value;
+          const confirmPassword = document.getElementById('confirmPassword').value;
+
+          if (!fullName || !password || !confirmPassword) {
+            throw new Error('Please enter your name and password.');
+          }
+          if (fullName.length < 2 || fullName.length > 120) {
+            throw new Error('Name must be between 2 and 120 characters.');
+          }
+          if (password.length < 4) {
+            throw new Error('Password must be at least 4 characters.');
+          }
+          if (password !== confirmPassword) {
+            throw new Error('Passwords do not match.');
+          }
+
+          const existing = findUser(users, fullName);
+          if (existing) {
+            throw new Error(`An account with the name "${fullName}" already exists. Please log in.`);
+          }
+
+          const newUser = {
+            id: 'usr_' + Date.now(),
+            fullName: fullName,
+            username: fullName.toLowerCase().replace(/\s+/g, ''),
+            passwordHash: await hashPassword(password),
+            createdAt: new Date().toISOString()
+          };
+
+          users.push(newUser);
+          saveUsers(users);
+
+          // Auto-login new user
+          const sessionData = JSON.stringify({
+            id: newUser.id,
+            fullName: newUser.fullName,
+            username: newUser.username
+          });
+          localStorage.setItem(CURRENT_USER_KEY, sessionData);
+
+          formMessage(message, 'Account created! Loading your dashboard…', 'success');
+          window.setTimeout(() => window.location.replace('dashboard.html'), 500);
+        } else {
+          // Login
+          const usernameInput = document.getElementById('username').value.trim();
+          const password = document.getElementById('password').value;
+
+          if (!usernameInput || !password) {
+            throw new Error('Enter your name and password to log in.');
+          }
+
+          let user = findUser(users, usernameInput);
+
+          // If no user found and no users in storage yet, create a default user profile
+          if (!user && users.length === 0) {
+            user = {
+              id: 'usr_' + Date.now(),
+              fullName: usernameInput,
+              username: usernameInput.toLowerCase().replace(/\s+/g, ''),
+              passwordHash: await hashPassword(password),
+              createdAt: new Date().toISOString()
+            };
+            users.push(user);
+            saveUsers(users);
+          }
+
+          if (!user) {
+            throw new Error(`No account found for "${usernameInput}". Click "Create an account" below to register.`);
+          }
+
+          const isValid = await verifyPassword(user, password);
+          if (!isValid) {
+            throw new Error('Incorrect password. Please try again or reset your password.');
+          }
+
+          const remember = document.getElementById('rememberMe')?.checked ?? true;
+          const sessionData = JSON.stringify({
+            id: user.id,
+            fullName: user.fullName,
+            username: user.username
+          });
+
+          if (remember) {
+            localStorage.setItem(CURRENT_USER_KEY, sessionData);
+            sessionStorage.removeItem(CURRENT_USER_KEY);
+          } else {
+            sessionStorage.setItem(CURRENT_USER_KEY, sessionData);
+            localStorage.removeItem(CURRENT_USER_KEY);
+          }
+
+          formMessage(message, 'Signed in successfully! Loading dashboard…', 'success');
+          window.setTimeout(() => window.location.replace('dashboard.html'), 400);
+        }
+      } catch (error) {
+        formMessage(message, error.message || 'Authentication failed. Please try again.', 'error');
+      } finally {
+        if (submit) {
+          submit.disabled = false;
+          submit.innerHTML = submit.dataset.originalText || (type === 'register' ? 'Create account' : 'Log in');
+        }
+      }
+    });
   });
 })();

@@ -731,7 +731,7 @@ function renderCategoryBreakdown() {
 
   const colors = ['#3b82f6', '#10b981', '#f59e0b', '#8b5cf6', '#06b6d4', '#f43f5e'];
 
-  container.innerHTML = categories.map((cat, idx) => `
+  container.innerHTML = categories.length ? categories.map((cat, idx) => `
     <div class="cat-item">
       <div class="cat-info">
         <span>${escapeHtml(cat.name)}</span>
@@ -741,7 +741,7 @@ function renderCategoryBreakdown() {
         <div class="cat-bar-fill" style="width: ${cat.pct}%; background-color: ${colors[idx % colors.length]};"></div>
       </div>
     </div>
-  `).join('');
+  `).join('') : '<p class="text-sm text-muted" style="padding: 1rem 0;">No spending categories recorded yet.</p>';
 }
 
 function renderReport() {
@@ -807,15 +807,46 @@ function drawIncomeExpenseChart() {
   const textColor = isDark ? '#94a3b8' : '#64748b';
   const gridColor = isDark ? '#1e293b' : '#f1f5f9';
 
-  // Sample weeks data
-  const data = [
-    { label: 'Week 1', income: 30000, expense: 12450 },
-    { label: 'Week 2', income: 10000, expense: 2800 },
-    { label: 'Week 3', income: 0, expense: 1850 },
-    { label: 'Week 4', income: 5000, expense: 1400 }
+  // If no transactions exist, draw clean empty state
+  if (!state.transactions || state.transactions.length === 0) {
+    ctx.fillStyle = textColor;
+    ctx.font = '600 13px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('No transactions recorded yet.', width / 2, height / 2 - 8);
+    ctx.font = '12px sans-serif';
+    ctx.fillStyle = isDark ? '#64748b' : '#94a3b8';
+    ctx.fillText('Click "+ Log Money" above to record your first income or expense.', width / 2, height / 2 + 16);
+    return;
+  }
+
+  // Calculate real period data from actual transactions
+  const now = new Date();
+  const periods = [
+    { label: '3 wks ago', start: new Date(now.getTime() - 28 * 86400000), end: new Date(now.getTime() - 21 * 86400000), income: 0, expense: 0 },
+    { label: '2 wks ago', start: new Date(now.getTime() - 21 * 86400000), end: new Date(now.getTime() - 14 * 86400000), income: 0, expense: 0 },
+    { label: 'Last week', start: new Date(now.getTime() - 14 * 86400000), end: new Date(now.getTime() - 7 * 86400000), income: 0, expense: 0 },
+    { label: 'This week', start: new Date(now.getTime() - 7 * 86400000), end: new Date(now.getTime() + 1 * 86400000), income: 0, expense: 0 }
   ];
 
-  const maxVal = 35000;
+  state.transactions.forEach(tx => {
+    const txDate = new Date(tx.date);
+    let matched = false;
+    for (const p of periods) {
+      if (txDate >= p.start && txDate <= p.end) {
+        if (tx.type === 'income') p.income += Number(tx.amount);
+        else p.expense += Number(tx.amount);
+        matched = true;
+        break;
+      }
+    }
+    if (!matched) {
+      if (tx.type === 'income') periods[3].income += Number(tx.amount);
+      else periods[3].expense += Number(tx.amount);
+    }
+  });
+
+  const data = periods.map(p => ({ label: p.label, income: p.income, expense: p.expense }));
+  const maxVal = Math.max(1000, ...data.map(d => Math.max(d.income, d.expense))) * 1.25;
   const padLeft = 45;
   const padRight = 20;
   const padBottom = 30;

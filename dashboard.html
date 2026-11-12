@@ -61,7 +61,6 @@
             <a href="#wallets" class="nav-link" data-tab="wallets">
               <i class="fa-solid fa-wallet"></i>
               <span>Payment Methods</span>
-              <span class="badge-pill">Manual records</span>
             </a>
           </li>
           <li>
@@ -80,13 +79,12 @@
             <a href="#ai-advisor" class="nav-link" data-tab="ai-advisor">
               <i class="fa-solid fa-robot"></i>
               <span>Budget Guide</span>
-              <span class="badge-ai">Budget guide</span>
             </a>
           </li>
           <li>
             <a href="#ussd-simulator" class="nav-link" data-tab="ussd-simulator">
               <i class="fa-solid fa-mobile-screen-button"></i>
-              <span>USSD browser preview</span>
+              <span>USSD Preview</span>
             </a>
           </li>
           <li>
@@ -140,8 +138,6 @@
         </div>
 
         <div class="header-actions">
-          <span class="dashboard-account-name" data-user-name></span>
-          <button class="btn-outline btn-sm" id="logoutBtn" type="button"><i class="fa-solid fa-arrow-right-from-bracket"></i><span>Log out</span></button>
           <!-- Quick Action: Quick Add Transaction -->
           <button class="btn-primary btn-sm" id="quickAddTxBtn">
             <i class="fa-solid fa-plus"></i>
@@ -154,11 +150,17 @@
             <span>USSD preview</span>
           </button>
 
+          <!-- Reset to Fresh Data -->
+          <button class="btn-outline btn-sm" id="resetDataBtn" type="button" title="Clear all data and start completely fresh">
+            <i class="fa-solid fa-rotate-left"></i>
+            <span>Reset Data</span>
+          </button>
+
           <!-- Notification Bell with Dropdown -->
           <div class="dropdown notification-dropdown">
             <button class="btn-icon notification-btn" id="notifBellBtn" aria-label="Notifications">
               <i class="fa-solid fa-bell"></i>
-              <span class="notification-dot" id="notifCount">3</span>
+              <span class="notification-dot" id="notifCount" style="display:none;">0</span>
             </button>
             <div class="dropdown-menu notif-menu" id="notifMenu">
               <div class="notif-header">
@@ -175,11 +177,13 @@
           <button class="btn-icon theme-toggle-btn" id="themeToggleBtn" aria-label="Toggle Dark/Light Mode" title="Toggle Theme">
             <i class="fa-solid fa-moon"></i>
           </button>
+
+          <button class="btn-outline btn-sm" id="logoutBtn" type="button"><i class="fa-solid fa-arrow-right-from-bracket"></i><span>Log out</span></button>
         </div>
       </header>
 
       <!-- Alert Banner for Overspending / Low Balance -->
-      <div class="system-alert-banner" id="systemAlertBanner">
+      <div class="system-alert-banner" id="systemAlertBanner" style="display: none;">
         <div class="alert-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
         <div class="alert-content">
           <strong>Your finances at a glance:</strong> Add income and expenses to see your personal balance and spending insights here.
@@ -199,16 +203,12 @@
             <!-- Card 1: Total Available Balance -->
             <div class="metric-card primary-card">
               <div class="metric-header">
-                <span class="metric-title">Total Available Balance</span>
-                <span class="metric-icon-wrap"><i class="fa-solid fa-coins"></i></span>
+                <span class="metric-title">Available Balance</span>
+                <span class="metric-icon-wrap"><i class="fa-solid fa-wallet"></i></span>
               </div>
               <div class="metric-value-wrap">
                 <h2 class="metric-value" id="totalBalanceDisplay">KES 0.00</h2>
-                <span class="metric-sublabel">Based on your recorded transactions</span>
-              </div>
-              <div class="metric-footer">
-                <span class="trend-indicator positive"><i class="fa-solid fa-arrow-trend-up"></i> Personal totals</span>
-                <span class="trend-text">From your transaction history</span>
+                <span class="metric-sublabel">Net available funds</span>
               </div>
             </div>
 
@@ -220,11 +220,7 @@
               </div>
               <div class="metric-value-wrap">
                 <h2 class="metric-value text-emerald" id="totalIncomeDisplay">KES 0.00</h2>
-                <span class="metric-sublabel">Your recorded income</span>
-              </div>
-              <div class="metric-footer">
-                <span class="metric-stat">Personal records</span>
-                <a href="#transactions" class="metric-action-link" data-tab="transactions">View details</a>
+                <span class="metric-sublabel">Total money in</span>
               </div>
             </div>
 
@@ -236,75 +232,20 @@
               </div>
               <div class="metric-value-wrap">
                 <h2 class="metric-value text-rose" id="totalExpensesDisplay">KES 0.00</h2>
-                <span class="metric-sublabel">Your recorded expenses</span>
-              </div>
-              <div class="metric-footer">
-                <span class="trend-indicator warning"><i class="fa-solid fa-gauge-high"></i> Personal totals</span>
-                <span class="trend-text">Based on your activity</span>
+                <span class="metric-sublabel">Total money spent</span>
               </div>
             </div>
 
             <!-- Card 4: Daily Survival Runway -->
             <div class="metric-card runway-card">
               <div class="metric-header">
-                <span class="metric-title">Illustrative Daily Plan</span>
+                <span class="metric-title">Daily Budget</span>
                 <span class="metric-icon-wrap runway-icon"><i class="fa-solid fa-calendar-check"></i></span>
               </div>
               <div class="metric-value-wrap">
                 <h2 class="metric-value text-amber" id="safeDailyAllowance">KES 0.00</h2>
-                <span class="metric-sublabel">Net balance / 84-day example period</span>
+                <span class="metric-sublabel">Safe daily allowance</span>
               </div>
-              <div class="metric-footer">
-                <span class="status-pill status-warning">Watch Eating Out</span>
-                <button class="btn-link-sm" id="openAiRunwayTip">Budget tips <i class="fa-solid fa-arrow-right"></i></button>
-              </div>
-            </div>
-
-          </div>
-
-          <!-- Section: Wallets Strip + Quick Goal Summary -->
-          <div class="dashboard-split-row">
-            
-            <!-- Left: Linked Accounts / Wallets Overview -->
-            <div class="dash-card flex-2">
-              <div class="card-header">
-                <div class="card-title-group">
-                  <i class="fa-solid fa-money-bill-transfer text-blue"></i>
-                  <h3>Payment methods in your records</h3>
-                </div>
-                <button class="btn-outline-sm" onclick="openNewTxModal()"><i class="fa-solid fa-plus"></i> Record transaction</button>
-              </div>
-              
-              <div class="wallets-grid" id="walletsOverviewGrid">
-                <p class="text-muted p-3">Payment method summaries will appear after you record transactions.</p>
-              </div>
-            </div>
-
-            <!-- Right: CampusCash budget guide -->
-            <div class="dash-card flex-1 ai-highlight-card">
-              <div class="card-header">
-                <div class="card-title-group">
-                  <i class="fa-solid fa-brain text-purple"></i>
-                  <h3>Ollie's Budget Tip</h3>
-                </div>
-                <span class="badge-ai">Rule-based tips</span>
-              </div>
-              <div class="ai-tip-body">
-                <div class="ai-avatar-mini">
-                  <img src="logo.jpg" alt="Mascot" class="mini-mascot-img" />
-                </div>
-                <div class="ai-tip-text">
-                  <p><strong>Keep it practical:</strong> Record your spending by category to spot patterns and decide where a small change could help.</p>
-                </div>
-              </div>
-              <div class="ai-quick-prompts">
-                <button class="prompt-chip" onclick="askAiPrompt('How can I save on hostel cooking?')">🍲 Cooking hacks</button>
-                <button class="prompt-chip" onclick="askAiPrompt('Best online side-hustles for Kenyan students?')">💻 Campus Gigs</button>
-                <button class="prompt-chip" onclick="askAiPrompt('What should I consider before choosing a savings product?')">📈 Savings products</button>
-              </div>
-              <button class="btn-primary-gradient full-width" onclick="switchTab('ai-advisor')">
-                <i class="fa-solid fa-comments"></i> Open budget guide
-              </button>
             </div>
 
           </div>
@@ -317,7 +258,7 @@
               <div class="card-header">
                 <div class="card-title-group">
                   <i class="fa-solid fa-chart-column text-blue"></i>
-                  <h3>Weekly Income vs Expenses (Semester View)</h3>
+                  <h3>Weekly Income vs Expenses</h3>
                 </div>
                 <div class="chart-period-selector">
                   <button class="period-btn active" data-period="weeks">Weeks</button>
@@ -328,8 +269,8 @@
                 <canvas id="incomeExpenseChart" width="600" height="240"></canvas>
               </div>
               <div class="chart-legend">
-                <span class="legend-item"><span class="legend-color-dot income-dot"></span> Income (KES)</span>
-                <span class="legend-item"><span class="legend-color-dot expense-dot"></span> Expenses (KES)</span>
+                <span class="legend-item"><span class="legend-color-dot income-dot"></span> Income</span>
+                <span class="legend-item"><span class="legend-color-dot expense-dot"></span> Expenses</span>
                 <span class="legend-item"><span class="legend-color-dot budget-dot"></span> Weekly Cap (KES 2,500)</span>
               </div>
             </div>
@@ -352,24 +293,7 @@
           <!-- Section: Active Goals Spotlight & Recent Transactions -->
           <div class="dashboard-split-row">
             
-            <!-- Left: Goals Spotlight -->
-            <div class="dash-card flex-1">
-              <div class="card-header">
-                <div class="card-title-group">
-                  <i class="fa-solid fa-bullseye text-emerald"></i>
-                  <h3>Semester Goals Progress</h3>
-                </div>
-                <button class="btn-outline-sm" onclick="openNewGoalModal()">
-                  <i class="fa-solid fa-plus"></i> New Goal
-                </button>
-              </div>
-              
-              <div class="goals-spotlight-list" id="goalsSpotlightList">
-                <!-- Dynamically populated goals -->
-              </div>
-            </div>
-
-            <!-- Right: Recent Transactions Table -->
+            <!-- Recent Transactions Table -->
             <div class="dash-card flex-2">
               <div class="card-header">
                 <div class="card-title-group">
@@ -397,6 +321,23 @@
                     <!-- Populated dynamically -->
                   </tbody>
                 </table>
+              </div>
+            </div>
+
+            <!-- Goals Spotlight -->
+            <div class="dash-card flex-1">
+              <div class="card-header">
+                <div class="card-title-group">
+                  <i class="fa-solid fa-bullseye text-emerald"></i>
+                  <h3>Semester Goals Progress</h3>
+                </div>
+                <button class="btn-outline-sm" onclick="openNewGoalModal()">
+                  <i class="fa-solid fa-plus"></i> New Goal
+                </button>
+              </div>
+              
+              <div class="goals-spotlight-list" id="goalsSpotlightList">
+                <!-- Dynamically populated goals -->
               </div>
             </div>
 
@@ -1131,8 +1072,6 @@
 
   <!-- Main JavaScript File -->
   <div id="dashboardLoading" class="dashboard-loading" role="status">Checking your secure CampusCash session…</div>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="supabase.js"></script>
   <script src="dashboard.js"></script>
   <script src="script.js"></script>
 </body>

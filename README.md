@@ -35,23 +35,12 @@ Many students receive government or institutional upkeep money at the start of t
 ## CampusCash web app setup
 
 The public website is `index.html`; student accounts use `register.html` and
-`login.html`; the existing student interface is `dashboard.html`.
+`login.html`; the student dashboard is `dashboard.html`.
 
-1. Create a Supabase project and run [`supabase.sql`](./supabase.sql) in its SQL
-   Editor.
-2. In [`supabase.js`](./supabase.js), set the Supabase project URL and the
-   public anon/publishable key. Never use a service-role key in the browser.
-3. Add the deployed app URL and its `login.html` path to Supabase's allowed
-   redirect URLs for email confirmation and password recovery.
-4. Serve the project over HTTP (for example, run `npm run dev`) and open
-   `index.html`. Supabase auth and the dashboard do not work from a `file://`
-   URL.
-
-Email/password accounts create their profile through a database trigger.
-Profiles, transactions, budgets and savings goals are protected with Row Level
-Security and loaded from Supabase. The dashboard redirects users without an
-active session to login. Financial channels are manual labels only: this project
-does not connect to banks, M-Pesa, SMS or a live USSD gateway.
+1. Serve the project over HTTP (for example, run `node server.js` or `npm run dev`) and open `index.html`.
+2. Register an account using your **Name** and **Password** on `register.html`. No email confirmation or external services are needed.
+3. Log in with your **Name** and **Password** on `login.html`.
+4. Your transactions, budgets, goals, and personal settings are securely saved to your local session and profile.
 
 ---
 

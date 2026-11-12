@@ -1,7 +1,7 @@
 // Set these to the Project URL and public anon/publishable key from Supabase.
 // Never put a service-role key in browser code.
-window.CAMPUSCASH_SUPABASE_URL = window.CAMPUSCASH_SUPABASE_URL || 'https://YOUR_PROJECT_ID.supabase.co';
-window.CAMPUSCASH_SUPABASE_ANON_KEY = window.CAMPUSCASH_SUPABASE_ANON_KEY || 'YOUR_SUPABASE_ANON_OR_PUBLISHABLE_KEY';
+window.CAMPUSCASH_SUPABASE_URL = window.CAMPUSCASH_SUPABASE_URL || 'https://jphbjbspmifkxcgudquv.supabase.co';
+window.CAMPUSCASH_SUPABASE_ANON_KEY = window.CAMPUSCASH_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpwaGJqYnNwbWlma3hjZ3VkcXV2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTQyODM0MzAsImV4cCI6MjEwOTg1OTQzMH0.WXwoEKJgs9QUcyyPIe5pXUOanFngc-iw1R4reDdgVPQ';
 
 window.createCampusCashClient = function (storageName) {
   const url = window.CAMPUSCASH_SUPABASE_URL;
